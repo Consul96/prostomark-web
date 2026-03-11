@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: prostomark-postgres
+    environment:
+      POSTGRES_DB: prostomark
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d prostomark']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: prostomark-redis
+    ports:
+      - '6379:6379'
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: prostomark-backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - '8000:8000'
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    container_name: prostomark-worker
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prostomark-frontend
+    env_file:
+      - .env
+    ports:
+      - '4173:4173'
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: prostomark-nginx
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - '80:80'
+
+volumes:
+  postgres_data:

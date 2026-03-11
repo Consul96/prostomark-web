@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 font-body;
+  background-image: radial-gradient(circle at 10% 20%, rgba(47, 140, 127, 0.08), transparent 35%), radial-gradient(circle at 90% 0%, rgba(15, 118, 110, 0.05), transparent 40%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
+
+input,
+select,
+textarea {
+  @apply focus:outline-none focus:ring-2 focus:ring-brand-300;
+}
