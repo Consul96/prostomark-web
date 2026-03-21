@@ -15,9 +15,9 @@ branch_labels = None
 depends_on = None
 
 
-user_role_enum = sa.Enum('superadmin', 'company_admin', 'manager', 'user', name='user_role_enum')
-subscription_status_enum = sa.Enum('trial', 'active', 'past_due', 'canceled', 'expired', name='subscription_status_enum')
-document_status_enum = sa.Enum('uploaded', 'processing', 'processed', 'failed', name='document_status_enum')
+user_role_enum = postgresql.ENUM('superadmin', 'company_admin', 'manager', 'user', name='user_role_enum', create_type=False)
+subscription_status_enum = postgresql.ENUM('trial', 'active', 'past_due', 'canceled', 'expired', name='subscription_status_enum', create_type=False)
+document_status_enum = postgresql.ENUM('uploaded', 'processing', 'processed', 'failed', name='document_status_enum', create_type=False)
 
 
 def upgrade() -> None:
