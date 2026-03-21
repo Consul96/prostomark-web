@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 
 interface ProductFormProps {
-  onSubmit: (payload: { name: string; brand?: string; gtin?: string; article?: string }) => Promise<void>;
+  onSubmit: (payload: { name: string; brand?: string; gtin?: string; article?: string }) => Promise<unknown> | void;
   loading?: boolean;
 }
 

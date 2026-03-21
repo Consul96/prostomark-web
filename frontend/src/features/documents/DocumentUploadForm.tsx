@@ -11,7 +11,7 @@ interface UploadPayload {
 }
 
 interface DocumentUploadFormProps {
-  onSubmit: (payload: UploadPayload) => Promise<void>;
+  onSubmit: (payload: UploadPayload) => Promise<unknown> | void;
   loading?: boolean;
 }
 
