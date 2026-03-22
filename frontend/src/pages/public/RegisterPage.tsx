@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { authApi } from '../../api/auth';
+import { getApiErrorMessage } from '../../api/errors';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useAuthStore } from '../../store/authStore';
@@ -25,8 +26,8 @@ export function RegisterPage() {
       toast.success('Регистрация завершена');
       navigate('/app/dashboard');
     },
-    onError: () => {
-      toast.error('Не удалось зарегистрироваться');
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, 'Не удалось зарегистрироваться'));
     },
   });
 

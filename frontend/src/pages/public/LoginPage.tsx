@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { authApi } from '../../api/auth';
+import { getApiErrorMessage } from '../../api/errors';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useAuthStore } from '../../store/authStore';
@@ -22,8 +23,8 @@ export function LoginPage() {
       toast.success('Вход выполнен');
       navigate('/app/dashboard');
     },
-    onError: () => {
-      toast.error('Ошибка авторизации');
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, 'Ошибка авторизации'));
     },
   });
 
