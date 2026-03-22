@@ -12,7 +12,7 @@ from app.models.subscription import CompanySubscription
 from app.models.token import RefreshToken
 from app.models.user import User
 from app.schemas.auth import LoginRequest, RegisterRequest
-from app.security.password import hash_password, verify_password
+from app.security.password import hash_password, verify_and_update_password
 from app.security.tokens import (
     TokenError,
     create_access_token,
@@ -40,8 +40,17 @@ def _unique_company_slug(db: Session, preferred: str) -> str:
 
 def authenticate_user(db: Session, payload: LoginRequest) -> User:
     user = get_user_by_email(db, payload.email)
-    if user is None or not verify_password(payload.password, user.password_hash):
+    if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid email or password')
+
+    is_valid, new_hash = verify_and_update_password(payload.password, user.password_hash)
+    if not is_valid:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid email or password')
+
+    if new_hash is not None:
+        user.password_hash = new_hash
+        db.flush()
+
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='User is inactive')
     return user
