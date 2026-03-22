@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   color-scheme: light;
 }
@@ -10,6 +14,11 @@
 body {
   @apply bg-slate-50 text-slate-800 font-body;
   background-image: radial-gradient(circle at 10% 20%, rgba(47, 140, 127, 0.08), transparent 35%), radial-gradient(circle at 90% 0%, rgba(15, 118, 110, 0.05), transparent 40%);
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #f8fafc;
 }
 
 h1,

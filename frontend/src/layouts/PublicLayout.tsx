@@ -1,6 +1,13 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 export function PublicLayout() {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
+  if (isHomePage) {
+    return <Outlet />;
+  }
+
   return (
     <div className="min-h-screen">
       <header className="border-b border-slate-200/70 bg-white/90 backdrop-blur">
