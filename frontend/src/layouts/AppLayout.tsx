@@ -2,10 +2,18 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { authApi } from '../api/auth';
+import type { Role } from '../api/types';
 import { useAuthStore } from '../store/authStore';
 
-const navigation = [
+interface NavigationItem {
+  to: string;
+  label: string;
+  roles?: Role[];
+}
+
+const navigation: NavigationItem[] = [
   { to: '/app/dashboard', label: 'Dashboard' },
+  { to: '/app/analytics', label: 'Analytics', roles: ['superadmin', 'manager'] },
   { to: '/app/calculator', label: 'Калькулятор' },
   { to: '/app/products', label: 'Товары' },
   { to: '/app/documents', label: 'Документы' },
@@ -18,6 +26,7 @@ export function AppLayout() {
   const user = useAuthStore((state) => state.user);
   const refreshToken = useAuthStore((state) => state.refreshToken);
   const clearSession = useAuthStore((state) => state.clearSession);
+  const navigationItems = navigation.filter((item) => !item.roles || (user ? item.roles.includes(user.role) : false));
 
   const handleLogout = async () => {
     try {
@@ -41,7 +50,7 @@ export function AppLayout() {
           <p className="mt-1 text-xs text-slate-500">SaaS платформа маркировки</p>
         </div>
         <nav className="space-y-1">
-          {navigation.map((item) => (
+          {navigationItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}

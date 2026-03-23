@@ -39,6 +39,14 @@ class Settings(BaseSettings):
     smtp_pass: str = ''
     smtp_from: str = 'noreply@prostomark.local'
 
+    analytics_events_file: Path = Path('storage/analytics/analytics_log.jsonl')
+    analytics_photo_history_file: Path = Path('storage/analytics/photo_history.json')
+    analytics_mismatch_file: Path = Path('storage/analytics/mismatch_log.json')
+    analytics_news_cache_file: Path = Path('storage/analytics/news_cache.json')
+    analytics_news_drafts_file: Path = Path('storage/analytics/news_drafts.json')
+    analytics_ai_usage_file: Path = Path('storage/analytics/ai_usage_log.txt')
+    analytics_runtime_metrics_file: Path | None = None
+
 
 @lru_cache
 def get_settings() -> Settings:

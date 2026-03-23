@@ -6,6 +6,7 @@ import { AdminLayout } from '../layouts/AdminLayout';
 import { AppLayout } from '../layouts/AppLayout';
 import { PublicLayout } from '../layouts/PublicLayout';
 import { CalculatorPage } from '../pages/app/CalculatorPage';
+import { AnalyticsPage } from '../pages/app/AnalyticsPage';
 import { DashboardPage } from '../pages/app/DashboardPage';
 import { DocumentsPage } from '../pages/app/DocumentsPage';
 import { HistoryPage } from '../pages/app/HistoryPage';
@@ -38,12 +39,20 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
+        element: <RoleRoute allowed={['superadmin', 'manager']} />,
+        children: [{ path: '/analytics', element: <Navigate to="/app/analytics" replace /> }],
+      },
+      {
         path: '/app',
         element: <AppLayout />,
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: 'dashboard', element: <DashboardPage /> },
           { path: 'calculator', element: <CalculatorPage /> },
+          {
+            element: <RoleRoute allowed={['superadmin', 'manager']} />,
+            children: [{ path: 'analytics', element: <AnalyticsPage /> }],
+          },
           { path: 'products', element: <ProductsPage /> },
           { path: 'documents', element: <DocumentsPage /> },
           { path: 'history', element: <HistoryPage /> },

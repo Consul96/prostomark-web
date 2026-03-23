@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import admin, auth, billing, calculations, dashboard, documents, products
+from app.routers import admin, analytics, auth, billing, calculations, dashboard, documents, products
 
 
 def create_app() -> FastAPI:
@@ -22,6 +22,7 @@ def create_app() -> FastAPI:
     app.include_router(documents.router, prefix=api_prefix)
     app.include_router(calculations.router, prefix=api_prefix)
     app.include_router(dashboard.router, prefix=api_prefix)
+    app.include_router(analytics.router, prefix=api_prefix)
     app.include_router(admin.router, prefix=api_prefix)
     app.include_router(billing.router, prefix=api_prefix)
 
