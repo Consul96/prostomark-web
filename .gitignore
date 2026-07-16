@@ -15,3 +15,6 @@ venv/
 
 /storage/
 backend/storage/
+
+# Redis dump artifact
+dump.rdb

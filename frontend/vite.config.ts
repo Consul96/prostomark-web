@@ -6,5 +6,13 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    // Локальная разработка без nginx: проксируем API на backend (uvicorn).
+    // В production /api обслуживает nginx; на сборку это не влияет.
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_PROXY_TARGET ?? 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+    },
   },
 });
