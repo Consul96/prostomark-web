@@ -12,6 +12,13 @@ import { DocumentsPage } from '../pages/app/DocumentsPage';
 import { HistoryPage } from '../pages/app/HistoryPage';
 import { ProductsPage } from '../pages/app/ProductsPage';
 import { SettingsPage } from '../pages/app/SettingsPage';
+import { MarkingLayout } from '../pages/app/marking/MarkingLayout';
+import { MarkingDashboardPage } from '../pages/app/marking/MarkingDashboardPage';
+import { MarkingClientsPage } from '../pages/app/marking/MarkingClientsPage';
+import { MarkingApplicationsPage } from '../pages/app/marking/MarkingApplicationsPage';
+import { MarkingHistoryPage } from '../pages/app/marking/MarkingHistoryPage';
+import { MarkingSignAgentsPage } from '../pages/app/marking/MarkingSignAgentsPage';
+import { MarkingPlaceholderPage } from '../pages/app/marking/MarkingPlaceholderPage';
 import { AdminCompaniesPage } from '../pages/admin/AdminCompaniesPage';
 import { AdminHomePage } from '../pages/admin/AdminHomePage';
 import { AdminLogsPage } from '../pages/admin/AdminLogsPage';
@@ -57,6 +64,21 @@ export const router = createBrowserRouter([
           { path: 'documents', element: <DocumentsPage /> },
           { path: 'history', element: <HistoryPage /> },
           { path: 'settings', element: <SettingsPage /> },
+          {
+            path: 'marking',
+            element: <MarkingLayout />,
+            children: [
+              { index: true, element: <MarkingDashboardPage /> },
+              { path: 'clients', element: <MarkingClientsPage /> },
+              { path: 'applications', element: <MarkingApplicationsPage /> },
+              { path: 'products', element: <MarkingPlaceholderPage title="Товары и GTIN" phase="Phase 2 (Национальный каталог)" /> },
+              { path: 'km-orders', element: <MarkingPlaceholderPage title="Заказы КМ" phase="Phase 3 (СУЗ)" /> },
+              { path: 'application-reports', element: <MarkingPlaceholderPage title="Контроль нанесения" phase="Phase 4" /> },
+              { path: 'circulation', element: <MarkingPlaceholderPage title="Ввод в оборот" phase="Phase 5" /> },
+              { path: 'sign-agents', element: <MarkingSignAgentsPage /> },
+              { path: 'history', element: <MarkingHistoryPage /> },
+            ],
+          },
         ],
       },
       {
