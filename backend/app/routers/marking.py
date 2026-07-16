@@ -63,7 +63,7 @@ from app.schemas.marking import (
 from app.security.permissions import require_roles
 from app.security.tokens import hash_token
 from app.services.marking.auth import sign_service
-from app.services.marking.clients import client_service
+from app.services.marking.clients import client_service, connection_service
 from app.services.marking.jobs import job_service
 
 router = APIRouter(prefix='/marking', tags=['marking'])
@@ -209,6 +209,19 @@ def clients_check(client_id: uuid.UUID, db: Session = Depends(get_db), user: Use
     return ConnectionCheckResult(**result)
 
 
+@router.post('/clients/{client_id}/sandbox-connection-test')
+def clients_sandbox_connection_test(
+    client_id: uuid.UUID, db: Session = Depends(get_db), user: User = Depends(_MANAGE)
+) -> dict:
+    """Реальная проверка аутентификации в True API и СУЗ (sandbox) через МЧД + Sign Agent.
+
+    Статус `ok` только при реально полученном токене; заполненность конфигурации
+    сама по себе `ok` не даёт. Юридически значимые операции не выполняются.
+    """
+    client = client_service.get_client(db, user.company_id, client_id)
+    return connection_service.run_connection_test(db, client)
+
+
 # =========================================================================
 # Заявки
 # =========================================================================
@@ -310,9 +323,9 @@ def agents_create(payload: SignerAgentCreate, db: Session = Depends(get_db), use
     db.add(agent)
     db.commit()
     db.refresh(agent)
-    out = SignerAgentCreated.model_validate(agent).model_dump()
-    out['api_key'] = api_key  # показывается один раз
-    return SignerAgentCreated(**out)
+    # api_key показывается один раз; в БД хранится только его hash.
+    base = SignerAgentOut.model_validate(agent).model_dump()
+    return SignerAgentCreated(**base, api_key=api_key)
 
 
 # --- внутренний протокол агента (аутентификация по API-ключу, не по JWT) ---
@@ -375,6 +388,17 @@ def agent_result(payload: SignAgentResult, agent: SignerAgent = Depends(get_agen
     job = db.get(SignJob, payload.job_id)
     if job is None or job.company_id != agent.company_id:
         raise HTTPException(status_code=404, detail='Job not found')
+    # Просроченную задачу подписывать нельзя.
+    if job.status != SignJobStatus.COMPLETED.value and job.expires_at < datetime.now(UTC):
+        job.status = SignJobStatus.EXPIRED.value
+        db.commit()
+        raise HTTPException(status_code=409, detail='Sign job expired')
+    # Терминальное состояние — повторный результат не принимаем (идемпотентность/защита).
+    if job.status in {SignJobStatus.COMPLETED.value, SignJobStatus.FAILED.value, SignJobStatus.EXPIRED.value}:
+        if job.status == SignJobStatus.COMPLETED.value and payload.payload_sha256 == job.payload_sha256:
+            # Дубль того же результата — отвечаем идемпотентно, ничего не меняем.
+            return {'status': 'ok', 'idempotent': True}
+        raise HTTPException(status_code=409, detail=f'Sign job already {job.status}')
     sign_service.complete_sign_job(
         db, job, signature_base64=payload.signature_base64, payload_sha256_from_agent=payload.payload_sha256
     )

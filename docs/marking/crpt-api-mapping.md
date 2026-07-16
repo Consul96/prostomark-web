@@ -170,3 +170,55 @@ True API `/cises/info` (раздел 6).
 - 🟡 Требуют сверки тел/схем перед боем: авторизация СУЗ (путь), создание заказа,
   получение КМ, ручной utilisation, `/cises/info`.
 - ⛔ NOT_IMPLEMENTED: Национальный каталог целиком, агрегация, выбытие, буфер-статус.
+
+---
+
+## Проверенное поведение в рантайме (hardening, sandbox)
+
+Проверено на локальном стеке (PostgreSQL 16 + Redis), Docker недоступен на хосте —
+использован эквивалентный локальный Postgres/Redis. Все проверки автоматизированы
+в `backend/tests/` (40 тестов зелёные).
+
+**Миграции.** Чистый `alembic upgrade head` (initial → marking) создаёт 18 таблиц
+`marking_*`; `downgrade -1` дропает только marking, база остаётся; полный цикл
+`downgrade base → upgrade head` проходит без ошибок.
+
+**Sandbox connection test** (`POST /clients/{id}/sandbox-connection-test`,
+`services/marking/clients/connection_service.py`):
+- по каждой системе выполняется **свежий** `/auth/key` challenge → attached-CMS
+  подпись через Sign Agent (`SignJob`) → `simpleSignIn` (True API — с ИНН клиента;
+  СУЗ — с omsConnection);
+- **раздельные кеши токенов** подтверждены рантаймом: ключи
+  `true-api:{env}:{signer}:{inn}` и `suz:{env}:{signer}:{inn}:{omsConnection}`
+  различаются (`token_caches_separated=true`);
+- **честный статус**: `ok` ставится ТОЛЬКО при реально полученном токене. При сетевой
+  ошибке → `unavailable`; при отсутствии МЧД/подписанта/omsConnection → `needs_setup`
+  (сеть при этом не дёргается). Заполненность полей сама по себе `ok` не даёт;
+- продакшн заблокирован: при `CRPT_ENV=production` без `CRPT_ALLOW_PRODUCTION=true`
+  тест поднимает `ProductionBlockedError` (409) до любых внешних вызовов;
+- юридически значимые операции в connection-тесте не выполняются.
+
+**Sign Agent (протокол, mock signer).** Проверено сквозным прогоном
+heartbeat → next-job (claim) → attached/detached подпись → result:
+- сырой API-ключ не хранится (только `HMAC-SHA256`); неверный ключ → 401;
+- `next-job` не выдаёт просроченные задачи и берёт `SELECT ... FOR UPDATE SKIP LOCKED`;
+- несовпадение `payload_sha256` → 409 `MARKING_PAYLOAD_HASH_MISMATCH`, задача не
+  переходит в COMPLETED;
+- просроченная задача при отправке результата → 409, статус `EXPIRED`;
+- дубль того же результата — идемпотентно `{ok, idempotent:true}`; переопределение
+  завершённой задачи другим payload → 409;
+- деактивированный агент → 401 (недоступен).
+
+**Изоляция арендаторов** доказана тестами: клиент/заявка/агент/SignJob/история одной
+компании недоступны другой (404/пусто), заявку нельзя создать на чужого клиента
+(подмена UUID → 404). **Роли**: view — все; создание клиента/заявки — manager+;
+deactivate/создание агента — только company_admin (+superadmin).
+
+**Найденный и исправленный баг.** Эндпоинт создания Sign Agent
+(`POST /sign-agent/agents`) падал с `ValidationError` (валидация ORM против модели с
+обязательным `api_key` до его инъекции) — эндпоинт не работал никогда. Исправлено;
+покрыто тестом `test_agent_registration_and_key_hashed`.
+
+**Безопасность логирования** подтверждена: HTTP-клиент маскирует заголовки
+`Authorization`/`clientToken`/`X-Api-Key`; токены/подписи/полные КМ/ключи/полные
+подписанные payload'ы в логи не пишутся.
