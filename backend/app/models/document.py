@@ -20,7 +20,7 @@ class Document(Base, UUIDPKMixin, TimestampMixin):
     file_path: Mapped[str] = mapped_column(String(1024), nullable=False)
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     mime_type: Mapped[str] = mapped_column(String(120), nullable=False)
-    status: Mapped[DocumentStatus] = mapped_column(Enum(DocumentStatus, name='document_status_enum'), nullable=False, default=DocumentStatus.UPLOADED)
+    status: Mapped[DocumentStatus] = mapped_column(Enum(DocumentStatus, name='document_status_enum', values_callable=lambda e: [m.value for m in e]), nullable=False, default=DocumentStatus.UPLOADED)
     extracted_text: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)

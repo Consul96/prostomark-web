@@ -16,7 +16,13 @@ class User(Base, UUIDPKMixin, TimestampMixin):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     first_name: Mapped[str] = mapped_column(String(120), nullable=False)
     last_name: Mapped[str] = mapped_column(String(120), nullable=False)
-    role: Mapped[UserRole] = mapped_column(Enum(UserRole, name='user_role_enum'), default=UserRole.USER, nullable=False)
+    # values_callable: в БД хранятся ЗНАЧЕНИЯ enum ('company_admin'), а не имена
+    # членов ('COMPANY_ADMIN') — иначе вставка падает на enum, созданном миграцией.
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole, name='user_role_enum', values_callable=lambda e: [m.value for m in e]),
+        default=UserRole.USER,
+        nullable=False,
+    )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_email_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
