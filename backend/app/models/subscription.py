@@ -29,7 +29,7 @@ class CompanySubscription(Base, UUIDPKMixin, TimestampMixin):
     plan_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey('subscription_plans.id'), nullable=False)
     stripe_customer_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     stripe_subscription_id: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
-    status: Mapped[SubscriptionStatus] = mapped_column(Enum(SubscriptionStatus, name='subscription_status_enum'), nullable=False, default=SubscriptionStatus.TRIAL)
+    status: Mapped[SubscriptionStatus] = mapped_column(Enum(SubscriptionStatus, name='subscription_status_enum', values_callable=lambda e: [m.value for m in e]), nullable=False, default=SubscriptionStatus.TRIAL)
     current_period_start: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     current_period_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
