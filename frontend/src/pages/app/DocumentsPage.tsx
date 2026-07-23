@@ -37,9 +37,9 @@ export function DocumentsPage() {
       {isLoading ? (
         <p>Загрузка...</p>
       ) : (
-        <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+        <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
           <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
+            <thead className="bg-surface-overlay text-content-subtle">
               <tr>
                 <th className="px-4 py-3">Файл</th>
                 <th className="px-4 py-3">Тип</th>
@@ -50,11 +50,11 @@ export function DocumentsPage() {
             </thead>
             <tbody>
               {docs.map((doc) => (
-                <tr key={doc.id} className="border-t border-slate-100">
+                <tr key={doc.id} className="border-t border-line">
                   <td className="px-4 py-3">{doc.original_filename}</td>
                   <td className="px-4 py-3">{doc.document_type}</td>
                   <td className="px-4 py-3">
-                    <span className="rounded-full bg-slate-100 px-2 py-1 text-xs">{doc.status}</span>
+                    <span className="rounded-full bg-surface-overlay px-2 py-1 text-xs">{doc.status}</span>
                   </td>
                   <td className="px-4 py-3">{formatDate(doc.created_at)}</td>
                   <td className="px-4 py-3">

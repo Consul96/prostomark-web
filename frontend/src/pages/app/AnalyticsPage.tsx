@@ -29,24 +29,24 @@ const tabs: Array<{ key: AnalyticsTab; label: string; icon: typeof BarChart3 }> 
 ];
 
 function toneClass(tone: string) {
-  if (tone === 'danger') return 'border-rose-200 bg-rose-50 text-rose-700';
-  if (tone === 'success') return 'border-emerald-200 bg-emerald-50 text-emerald-700';
-  if (tone === 'brand') return 'border-brand-200 bg-brand-50 text-brand-700';
-  return 'border-slate-200 bg-slate-50 text-slate-700';
+  if (tone === 'danger') return 'border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-300';
+  if (tone === 'success') return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300';
+  if (tone === 'brand') return 'border-accent/30 bg-accent-soft text-accent';
+  return 'border-line bg-surface-overlay text-content-muted';
 }
 
 function EmptyState({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-      <p className="text-lg font-semibold text-slate-950">{title}</p>
-      <p className="mt-2 text-sm text-slate-500">{description}</p>
+    <div className="rounded-3xl border border-dashed border-line bg-surface-overlay p-10 text-center">
+      <p className="text-lg font-semibold text-content">{title}</p>
+      <p className="mt-2 text-sm text-content-subtle">{description}</p>
     </div>
   );
 }
 
 function ErrorState({ error, retry }: { error: unknown; retry?: () => void }) {
   return (
-    <div className="rounded-3xl border border-rose-200 bg-rose-50 p-5 text-rose-800">
+    <div className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-5 text-rose-600 dark:text-rose-300">
       <div className="flex items-start gap-3">
         <AlertTriangle className="mt-0.5 h-5 w-5" />
         <div>
@@ -56,7 +56,7 @@ function ErrorState({ error, retry }: { error: unknown; retry?: () => void }) {
             <button
               type="button"
               onClick={retry}
-              className="mt-3 inline-flex items-center gap-2 rounded-xl border border-rose-300 bg-white px-3 py-2 text-sm font-medium text-rose-700"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl border border-rose-500/40 bg-surface-raised px-3 py-2 text-sm font-medium text-rose-600 dark:text-rose-300"
             >
               <RefreshCw className="h-4 w-4" />
               Повторить
@@ -81,12 +81,12 @@ function FilterInput({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-content-subtle">{label}</span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
+        className="mt-2 w-full rounded-2xl border border-line bg-surface-raised px-4 py-3 text-sm text-content outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-accent/25"
       />
     </label>
   );
@@ -99,7 +99,7 @@ function SummaryHighlights({ items }: { items: string[] }) {
       <h2 className="mt-3 text-2xl font-semibold">Product analytics for Telegram Mini App</h2>
       <div className="mt-6 grid gap-3 md:grid-cols-3">
         {items.map((item) => (
-          <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
+          <div key={item} className="rounded-2xl border border-white/10 bg-surface-raised/5 p-4 text-sm text-slate-200">
             {item}
           </div>
         ))}
@@ -116,7 +116,7 @@ function EventsTable({ events }: { events: AnalyticsEventRecord[] }) {
   return (
     <Table>
       <table className="min-w-full text-left text-sm">
-        <thead className="bg-slate-50 text-slate-500">
+        <thead className="bg-surface-overlay text-content-subtle">
           <tr>
             <th className="px-4 py-3">Время</th>
             <th className="px-4 py-3">Event</th>
@@ -128,19 +128,19 @@ function EventsTable({ events }: { events: AnalyticsEventRecord[] }) {
         </thead>
         <tbody>
           {events.map((item, index) => (
-            <tr key={`${item.dt ?? 'event'}-${index}`} className="border-t border-slate-100 align-top">
-              <td className="px-4 py-3 text-slate-600">{formatDate(item.dt)}</td>
-              <td className="px-4 py-3 font-medium text-slate-950">{item.event}</td>
+            <tr key={`${item.dt ?? 'event'}-${index}`} className="border-t border-line align-top">
+              <td className="px-4 py-3 text-content-muted">{formatDate(item.dt)}</td>
+              <td className="px-4 py-3 font-medium text-content">{item.event}</td>
               <td className="px-4 py-3">
                 <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${toneClass(item.module === 'photos' ? 'brand' : 'neutral')}`}>
                   {item.module}
                 </span>
               </td>
-              <td className="px-4 py-3 text-slate-700">{item.username || item.user_id || 'Unknown'}</td>
-              <td className="px-4 py-3 text-slate-600">
+              <td className="px-4 py-3 text-content-muted">{item.username || item.user_id || 'Unknown'}</td>
+              <td className="px-4 py-3 text-content-muted">
                 {item.chat_id ?? '-'} / {item.thread_id ?? '-'}
               </td>
-              <td className="px-4 py-3 text-xs text-slate-500">
+              <td className="px-4 py-3 text-xs text-content-subtle">
                 <pre className="max-w-[320px] whitespace-pre-wrap break-words font-mono">{JSON.stringify(item.meta, null, 2)}</pre>
               </td>
             </tr>
@@ -154,27 +154,27 @@ function EventsTable({ events }: { events: AnalyticsEventRecord[] }) {
 function PhotoTable({ items, title }: { items: AnalyticsPhotoRecord[]; title: string }) {
   return (
     <Card className="p-0">
-      <div className="border-b border-slate-100 px-5 py-4">
-        <h3 className="text-lg font-semibold text-slate-950">{title}</h3>
+      <div className="border-b border-line px-5 py-4">
+        <h3 className="text-lg font-semibold text-content">{title}</h3>
       </div>
       {items.length === 0 ? (
         <div className="p-5">
           <EmptyState title="Нет кейсов" description="В выбранном периоде нет подходящих фото-записей." />
         </div>
       ) : (
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-line">
           {items.map((item) => (
             <div key={`${item.photo_id}-${item.timestamp ?? 'na'}`} className="px-5 py-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="font-medium text-slate-950">{item.caption || 'Без caption'}</p>
-                  <p className="mt-1 text-xs text-slate-500">{formatDate(item.timestamp)} · {item.photo_id}</p>
+                  <p className="font-medium text-content">{item.caption || 'Без caption'}</p>
+                  <p className="mt-1 text-xs text-content-subtle">{formatDate(item.timestamp)} · {item.photo_id}</p>
                 </div>
                 <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${toneClass(item.status === 'ok' ? 'success' : 'danger')}`}>
                   {item.status}
                 </span>
               </div>
-              <p className="mt-3 text-sm text-slate-600">{item.reply_preview || 'Нет preview ответа'}</p>
+              <p className="mt-3 text-sm text-content-muted">{item.reply_preview || 'Нет preview ответа'}</p>
             </div>
           ))}
         </div>
@@ -186,15 +186,15 @@ function PhotoTable({ items, title }: { items: AnalyticsPhotoRecord[]; title: st
 function BreakdownTable({ title, items }: { title: string; items: AnalyticsBreakdownItem[] }) {
   return (
     <Card>
-      <h3 className="text-lg font-semibold text-slate-950">{title}</h3>
+      <h3 className="text-lg font-semibold text-content">{title}</h3>
       <div className="mt-4 space-y-3">
         {items.length === 0 ? (
-          <p className="text-sm text-slate-500">Нет данных</p>
+          <p className="text-sm text-content-subtle">Нет данных</p>
         ) : (
           items.map((item) => (
-            <div key={item.key} className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3">
-              <p className="text-sm text-slate-700">{item.label}</p>
-              <p className="text-sm font-semibold text-slate-950">{item.value}</p>
+            <div key={item.key} className="flex items-center justify-between gap-4 rounded-2xl bg-surface-overlay px-4 py-3">
+              <p className="text-sm text-content-muted">{item.label}</p>
+              <p className="text-sm font-semibold text-content">{item.value}</p>
             </div>
           ))
         )}
@@ -293,7 +293,7 @@ export function AnalyticsPage() {
               href={analyticsApi.exportCsvUrl({ ...baseFilters, limit: 200 })}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/15"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-surface-raised/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-surface-raised/15"
             >
               <Download className="h-4 w-4" />
               Export CSV
@@ -311,12 +311,12 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      <Card className="border border-slate-200 bg-white/95">
+      <Card className="border border-line bg-surface-raised/95">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Filters</p>
-            <h2 className="mt-2 text-xl font-semibold text-slate-950">Контекст анализа</h2>
-            <p className="mt-2 text-sm text-slate-500">Фильтры применяются ко всем вкладкам. Для photo/news/system используются безопасные fallback-источники, если события недоступны.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-subtle">Filters</p>
+            <h2 className="mt-2 text-xl font-semibold text-content">Контекст анализа</h2>
+            <p className="mt-2 text-sm text-content-subtle">Фильтры применяются ко всем вкладкам. Для photo/news/system используются безопасные fallback-источники, если события недоступны.</p>
           </div>
           <button
             type="button"
@@ -330,7 +330,7 @@ export function AnalyticsPage() {
               newsQuery.refetch();
               systemQuery.refetch();
             }}
-            className="inline-flex items-center gap-2 self-start rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            className="inline-flex items-center gap-2 self-start rounded-2xl border border-line px-4 py-3 text-sm font-medium text-content-muted transition hover:bg-surface-overlay"
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
@@ -338,7 +338,7 @@ export function AnalyticsPage() {
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Период</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-content-subtle">Период</span>
             <select
               value={period}
               onChange={(event) => {
@@ -347,7 +347,7 @@ export function AnalyticsPage() {
                 setPhotosOffset(0);
                 setMismatchOffset(0);
               }}
-              className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
+              className="mt-2 w-full rounded-2xl border border-line bg-surface-raised px-4 py-3 text-sm text-content outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-accent/25"
             >
               <option value="7d">Последние 7 дней</option>
               <option value="30d">Последние 30 дней</option>
@@ -373,7 +373,7 @@ export function AnalyticsPage() {
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={`inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition ${
-                active ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                active ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25' : 'border border-line bg-surface-raised text-content-muted hover:bg-surface-overlay'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -383,7 +383,7 @@ export function AnalyticsPage() {
         })}
       </div>
 
-      {summaryQuery.isLoading ? <p className="text-sm text-slate-500">Загрузка summary...</p> : null}
+      {summaryQuery.isLoading ? <p className="text-sm text-content-subtle">Загрузка summary...</p> : null}
       {summaryQuery.isError ? <ErrorState error={summaryQuery.error} retry={() => summaryQuery.refetch()} /> : null}
 
       {activeTab === 'summary' && summaryQuery.data ? (
@@ -410,32 +410,32 @@ export function AnalyticsPage() {
           <div className="grid gap-6 xl:grid-cols-2">
             <Card>
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-950">Top users</h3>
-                <span className="text-sm text-slate-500">Usage tab</span>
+                <h3 className="text-lg font-semibold text-content">Top users</h3>
+                <span className="text-sm text-content-subtle">Usage tab</span>
               </div>
               <div className="mt-4 space-y-3">
                 {usersQuery.data?.top_users?.slice(0, 5).map((item) => (
-                  <div key={`${item.user_id ?? 'unknown'}-${item.username}`} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+                  <div key={`${item.user_id ?? 'unknown'}-${item.username}`} className="flex items-center justify-between rounded-2xl bg-surface-overlay px-4 py-3">
                     <div>
-                      <p className="font-medium text-slate-950">{item.username}</p>
-                      <p className="text-xs text-slate-500">photos {item.photos} · callbacks {item.callbacks}</p>
+                      <p className="font-medium text-content">{item.username}</p>
+                      <p className="text-xs text-content-subtle">photos {item.photos} · callbacks {item.callbacks}</p>
                     </div>
-                    <p className="text-sm font-semibold text-slate-950">{item.total_events}</p>
+                    <p className="text-sm font-semibold text-content">{item.total_events}</p>
                   </div>
-                )) ?? <p className="text-sm text-slate-500">Нет данных</p>}
+                )) ?? <p className="text-sm text-content-subtle">Нет данных</p>}
               </div>
             </Card>
             <Card>
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-950">System watch</h3>
-                <span className="text-sm text-slate-500">Health tab</span>
+                <h3 className="text-lg font-semibold text-content">System watch</h3>
+                <span className="text-sm text-content-subtle">Health tab</span>
               </div>
               <div className="mt-4 space-y-3">
                 {systemQuery.data?.anomalies?.slice(0, 5).map((item) => (
-                  <div key={item} className="rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                  <div key={item} className="rounded-2xl border border-line px-4 py-3 text-sm text-content-muted">
                     {item}
                   </div>
-                )) ?? <p className="text-sm text-slate-500">Нет аномалий</p>}
+                )) ?? <p className="text-sm text-content-subtle">Нет аномалий</p>}
               </div>
             </Card>
           </div>
@@ -454,37 +454,37 @@ export function AnalyticsPage() {
             </div>
             <div className="grid gap-6 xl:grid-cols-2">
               <Card>
-                <h3 className="text-lg font-semibold text-slate-950">Top users</h3>
+                <h3 className="text-lg font-semibold text-content">Top users</h3>
                 <div className="mt-4 space-y-3">
                   {usersQuery.data?.top_users.map((item) => (
-                    <div key={`${item.user_id ?? 'unknown'}-${item.username}`} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+                    <div key={`${item.user_id ?? 'unknown'}-${item.username}`} className="flex items-center justify-between rounded-2xl bg-surface-overlay px-4 py-3">
                       <div>
-                        <p className="font-medium text-slate-950">{item.username}</p>
-                        <p className="text-xs text-slate-500">cmd {item.commands} · photo {item.photos} · errors {item.errors}</p>
+                        <p className="font-medium text-content">{item.username}</p>
+                        <p className="text-xs text-content-subtle">cmd {item.commands} · photo {item.photos} · errors {item.errors}</p>
                       </div>
-                      <p className="text-sm font-semibold text-slate-950">{item.total_events}</p>
+                      <p className="text-sm font-semibold text-content">{item.total_events}</p>
                     </div>
-                  )) ?? <p className="text-sm text-slate-500">Нет данных</p>}
+                  )) ?? <p className="text-sm text-content-subtle">Нет данных</p>}
                 </div>
               </Card>
               <Card>
-                <h3 className="text-lg font-semibold text-slate-950">Top threads</h3>
+                <h3 className="text-lg font-semibold text-content">Top threads</h3>
                 <div className="mt-4 space-y-3">
                   {usersQuery.data?.top_threads.map((item) => (
-                    <div key={item.thread_id} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+                    <div key={item.thread_id} className="flex items-center justify-between rounded-2xl bg-surface-overlay px-4 py-3">
                       <div>
-                        <p className="font-medium text-slate-950">Thread {item.thread_id}</p>
-                        <p className="text-xs text-slate-500">users {item.unique_users}</p>
+                        <p className="font-medium text-content">Thread {item.thread_id}</p>
+                        <p className="text-xs text-content-subtle">users {item.unique_users}</p>
                       </div>
-                      <p className="text-sm font-semibold text-slate-950">{item.total_events}</p>
+                      <p className="text-sm font-semibold text-content">{item.total_events}</p>
                     </div>
-                  )) ?? <p className="text-sm text-slate-500">Нет данных</p>}
+                  )) ?? <p className="text-sm text-content-subtle">Нет данных</p>}
                 </div>
               </Card>
             </div>
             <EventsTable events={usageQuery.data.events} />
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-content-subtle">
                 Показано {usageQuery.data.events.length} из {usageQuery.data.total_events}
               </p>
               <div className="flex gap-2">
@@ -492,7 +492,7 @@ export function AnalyticsPage() {
                   type="button"
                   onClick={() => setUsageOffset((current) => Math.max(0, current - 25))}
                   disabled={usageOffset === 0}
-                  className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 disabled:opacity-50"
+                  className="rounded-2xl border border-line px-4 py-2 text-sm font-medium text-content-muted disabled:opacity-50"
                 >
                   Назад
                 </button>
@@ -500,7 +500,7 @@ export function AnalyticsPage() {
                   type="button"
                   onClick={() => setUsageOffset((current) => current + 25)}
                   disabled={!usageQuery.data.has_more}
-                  className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 disabled:opacity-50"
+                  className="rounded-2xl border border-line px-4 py-2 text-sm font-medium text-content-muted disabled:opacity-50"
                 >
                   Дальше
                 </button>
@@ -526,10 +526,10 @@ export function AnalyticsPage() {
             <div className="grid gap-6 xl:grid-cols-2">
               <PhotoTable items={photosSummaryQuery.data?.recent_cases ?? []} title="Последние кейсы" />
               <Card>
-                <h3 className="text-lg font-semibold text-slate-950">Signals</h3>
+                <h3 className="text-lg font-semibold text-content">Signals</h3>
                 <div className="mt-4 space-y-3">
-                  <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">Photos tab собирает историю анализа и обратную связь mismatch/ok без отдельной БД, напрямую из существующих JSON-файлов.</div>
-                  <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">Для роста объёма данных следующий шаг: вынести photo history и feedback в persistent storage и добавить полнотекстовый поиск по caption.</div>
+                  <div className="rounded-2xl bg-surface-overlay p-4 text-sm text-content-muted">Photos tab собирает историю анализа и обратную связь mismatch/ok без отдельной БД, напрямую из существующих JSON-файлов.</div>
+                  <div className="rounded-2xl bg-surface-overlay p-4 text-sm text-content-muted">Для роста объёма данных следующий шаг: вынести photo history и feedback в persistent storage и добавить полнотекстовый поиск по caption.</div>
                 </div>
               </Card>
             </div>
@@ -538,18 +538,18 @@ export function AnalyticsPage() {
               {mismatchQuery.data ? <PhotoTable items={mismatchQuery.data.items} title="Mismatch cases" /> : null}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <p className="text-sm text-slate-500">История фото: {photosHistoryQuery.data?.total ?? 0}</p>
+              <div className="flex items-center justify-between rounded-2xl border border-line bg-surface-raised px-4 py-3">
+                <p className="text-sm text-content-subtle">История фото: {photosHistoryQuery.data?.total ?? 0}</p>
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => setPhotosOffset((current) => Math.max(0, current - 8))} disabled={photosOffset === 0} className="rounded-xl border border-slate-200 px-3 py-2 text-sm disabled:opacity-50">Назад</button>
-                  <button type="button" onClick={() => setPhotosOffset((current) => current + 8)} disabled={!photosHistoryQuery.data?.has_more} className="rounded-xl border border-slate-200 px-3 py-2 text-sm disabled:opacity-50">Дальше</button>
+                  <button type="button" onClick={() => setPhotosOffset((current) => Math.max(0, current - 8))} disabled={photosOffset === 0} className="rounded-xl border border-line px-3 py-2 text-sm disabled:opacity-50">Назад</button>
+                  <button type="button" onClick={() => setPhotosOffset((current) => current + 8)} disabled={!photosHistoryQuery.data?.has_more} className="rounded-xl border border-line px-3 py-2 text-sm disabled:opacity-50">Дальше</button>
                 </div>
               </div>
-              <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <p className="text-sm text-slate-500">Mismatch cases: {mismatchQuery.data?.total ?? 0}</p>
+              <div className="flex items-center justify-between rounded-2xl border border-line bg-surface-raised px-4 py-3">
+                <p className="text-sm text-content-subtle">Mismatch cases: {mismatchQuery.data?.total ?? 0}</p>
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => setMismatchOffset((current) => Math.max(0, current - 8))} disabled={mismatchOffset === 0} className="rounded-xl border border-slate-200 px-3 py-2 text-sm disabled:opacity-50">Назад</button>
-                  <button type="button" onClick={() => setMismatchOffset((current) => current + 8)} disabled={!mismatchQuery.data?.has_more} className="rounded-xl border border-slate-200 px-3 py-2 text-sm disabled:opacity-50">Дальше</button>
+                  <button type="button" onClick={() => setMismatchOffset((current) => Math.max(0, current - 8))} disabled={mismatchOffset === 0} className="rounded-xl border border-line px-3 py-2 text-sm disabled:opacity-50">Назад</button>
+                  <button type="button" onClick={() => setMismatchOffset((current) => current + 8)} disabled={!mismatchQuery.data?.has_more} className="rounded-xl border border-line px-3 py-2 text-sm disabled:opacity-50">Дальше</button>
                 </div>
               </div>
             </div>
@@ -575,14 +575,14 @@ export function AnalyticsPage() {
               <StackedBarChart title="By source" items={newsQuery.data.by_source} />
             </div>
             <Card>
-              <h3 className="text-lg font-semibold text-slate-950">Recent news</h3>
+              <h3 className="text-lg font-semibold text-content">Recent news</h3>
               <div className="mt-4 space-y-3">
                 {newsQuery.data.recent_items.map((item) => (
-                  <div key={item.news_id} className="rounded-2xl border border-slate-200 p-4">
+                  <div key={item.news_id} className="rounded-2xl border border-line p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <p className="font-medium text-slate-950">{item.title}</p>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="font-medium text-content">{item.title}</p>
+                        <p className="mt-1 text-xs text-content-subtle">
                           {item.source} · {item.category} · {formatDate(item.cached_at)}
                         </p>
                       </div>
@@ -591,7 +591,7 @@ export function AnalyticsPage() {
                       </span>
                     </div>
                     {item.link ? (
-                      <a href={item.link} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-brand-700 hover:text-brand-800">
+                      <a href={item.link} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-accent hover:text-accent">
                         Открыть источник
                       </a>
                     ) : null}
@@ -600,10 +600,10 @@ export function AnalyticsPage() {
               </div>
             </Card>
             <Card>
-              <h3 className="text-lg font-semibold text-slate-950">Notes</h3>
+              <h3 className="text-lg font-semibold text-content">Notes</h3>
               <div className="mt-4 space-y-3">
                 {newsQuery.data.notes.map((item) => (
-                  <div key={item} className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">{item}</div>
+                  <div key={item} className="rounded-2xl bg-surface-overlay p-4 text-sm text-content-muted">{item}</div>
                 ))}
               </div>
             </Card>
@@ -626,40 +626,40 @@ export function AnalyticsPage() {
             />
             <div className="grid gap-6 xl:grid-cols-2">
               <Card>
-                <h3 className="text-lg font-semibold text-slate-950">Recent errors & anomalies</h3>
+                <h3 className="text-lg font-semibold text-content">Recent errors & anomalies</h3>
                 <div className="mt-4 space-y-3">
                   {systemQuery.data.recent_errors.length === 0 ? (
-                    <p className="text-sm text-slate-500">Нет явных ошибок за период.</p>
+                    <p className="text-sm text-content-subtle">Нет явных ошибок за период.</p>
                   ) : (
                     systemQuery.data.recent_errors.map((item) => (
-                      <div key={`${item.source}-${item.created_at ?? 'na'}-${item.message}`} className={`rounded-2xl border p-4 ${item.severity === 'critical' ? 'border-rose-200 bg-rose-50' : 'border-amber-200 bg-amber-50'}`}>
-                        <p className="font-medium text-slate-950">{item.message}</p>
-                        <p className="mt-1 text-xs text-slate-500">{item.scope} · {item.source} · {formatDate(item.created_at)}</p>
+                      <div key={`${item.source}-${item.created_at ?? 'na'}-${item.message}`} className={`rounded-2xl border p-4 ${item.severity === 'critical' ? 'border-rose-500/30 bg-rose-500/10' : 'border-amber-500/30 bg-amber-500/10'}`}>
+                        <p className="font-medium text-content">{item.message}</p>
+                        <p className="mt-1 text-xs text-content-subtle">{item.scope} · {item.source} · {formatDate(item.created_at)}</p>
                       </div>
                     ))
                   )}
                 </div>
               </Card>
               <Card>
-                <h3 className="text-lg font-semibold text-slate-950">AI usage</h3>
+                <h3 className="text-lg font-semibold text-content">AI usage</h3>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Requests</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-950">{systemQuery.data.ai_usage.total_requests}</p>
+                  <div className="rounded-2xl bg-surface-overlay p-4">
+                    <p className="text-xs uppercase tracking-[0.16em] text-content-subtle">Requests</p>
+                    <p className="mt-2 text-2xl font-semibold text-content">{systemQuery.data.ai_usage.total_requests}</p>
                   </div>
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Total tokens</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-950">{systemQuery.data.ai_usage.total_tokens}</p>
+                  <div className="rounded-2xl bg-surface-overlay p-4">
+                    <p className="text-xs uppercase tracking-[0.16em] text-content-subtle">Total tokens</p>
+                    <p className="mt-2 text-2xl font-semibold text-content">{systemQuery.data.ai_usage.total_tokens}</p>
                   </div>
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Prompt / completion</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-950">
+                  <div className="rounded-2xl bg-surface-overlay p-4">
+                    <p className="text-xs uppercase tracking-[0.16em] text-content-subtle">Prompt / completion</p>
+                    <p className="mt-2 text-2xl font-semibold text-content">
                       {systemQuery.data.ai_usage.total_prompt_tokens} / {systemQuery.data.ai_usage.total_completion_tokens}
                     </p>
                   </div>
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Cost USD</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-950">${systemQuery.data.ai_usage.total_cost_usd.toFixed(4)}</p>
+                  <div className="rounded-2xl bg-surface-overlay p-4">
+                    <p className="text-xs uppercase tracking-[0.16em] text-content-subtle">Cost USD</p>
+                    <p className="mt-2 text-2xl font-semibold text-content">${systemQuery.data.ai_usage.total_cost_usd.toFixed(4)}</p>
                   </div>
                 </div>
               </Card>
@@ -681,16 +681,16 @@ export function AnalyticsPage() {
           </Card>
           <div className="grid gap-6 lg:grid-cols-3">
             <Card>
-              <h3 className="text-lg font-semibold text-slate-950">Overview</h3>
-              <p className="mt-3 text-sm text-slate-500">Подключить overview по задачам, входящим потокам и загрузке команд.</p>
+              <h3 className="text-lg font-semibold text-content">Overview</h3>
+              <p className="mt-3 text-sm text-content-subtle">Подключить overview по задачам, входящим потокам и загрузке команд.</p>
             </Card>
             <Card>
-              <h3 className="text-lg font-semibold text-slate-950">Statuses & SLA</h3>
-              <p className="mt-3 text-sm text-slate-500">Добавить статусы, lead time, first-response и SLA breach counters.</p>
+              <h3 className="text-lg font-semibold text-content">Statuses & SLA</h3>
+              <p className="mt-3 text-sm text-content-subtle">Добавить статусы, lead time, first-response и SLA breach counters.</p>
             </Card>
             <Card>
-              <h3 className="text-lg font-semibold text-slate-950">Employee summary</h3>
-              <p className="mt-3 text-sm text-slate-500">Подготовлено место для перформанса сотрудников и менеджеров после появления источника данных.</p>
+              <h3 className="text-lg font-semibold text-content">Employee summary</h3>
+              <p className="mt-3 text-sm text-content-subtle">Подготовлено место для перформанса сотрудников и менеджеров после появления источника данных.</p>
             </Card>
           </div>
           <EmptyState title="Ops API пока не подключён" description="Следующий шаг: описать persistent storage и endpoint contracts для operational tracker." />

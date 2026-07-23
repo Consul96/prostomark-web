@@ -9,9 +9,9 @@ interface StatCardProps {
 export function StatCard({ title, value, hint }: StatCardProps) {
   return (
     <Card>
-      <p className="text-xs uppercase tracking-wide text-slate-500">{title}</p>
-      <p className="mt-3 text-3xl font-bold text-slate-900">{value}</p>
-      {hint ? <p className="mt-2 text-sm text-slate-500">{hint}</p> : null}
+      <p className="text-xs uppercase tracking-wide text-content-subtle">{title}</p>
+      <p className="mt-3 text-3xl font-bold text-content">{value}</p>
+      {hint ? <p className="mt-2 text-sm text-content-muted">{hint}</p> : null}
     </Card>
   );
 }

@@ -25,8 +25,8 @@ export function DashboardPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <h3 className="text-lg font-semibold">Аналитика</h3>
-          <p className="mt-3 text-sm text-slate-600">Расчетов за 7 дней: {data?.analytics.calculations_last_7d ?? 0}</p>
-          <div className="mt-3 space-y-1 text-sm text-slate-700">
+          <p className="mt-3 text-sm text-content-muted">Расчетов за 7 дней: {data?.analytics.calculations_last_7d ?? 0}</p>
+          <div className="mt-3 space-y-1 text-sm text-content-muted">
             {Object.entries(data?.analytics.documents_by_status ?? {}).map(([status, count]) => (
               <p key={status}>
                 {status}: {count}
@@ -37,11 +37,11 @@ export function DashboardPage() {
 
         <Card>
           <h3 className="text-lg font-semibold">Последние действия</h3>
-          <div className="mt-3 space-y-2 text-sm text-slate-700">
+          <div className="mt-3 space-y-2 text-sm text-content-muted">
             {data?.recent_actions?.map((log) => (
-              <div key={log.id} className="rounded-xl bg-slate-50 p-3">
+              <div key={log.id} className="rounded-xl bg-surface-overlay p-3">
                 <p className="font-medium">{log.action}</p>
-                <p className="text-xs text-slate-500">{formatDate(log.created_at)}</p>
+                <p className="text-xs text-content-subtle">{formatDate(log.created_at)}</p>
               </div>
             ))}
           </div>
@@ -50,7 +50,7 @@ export function DashboardPage() {
 
       <Table>
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-overlay text-content-subtle">
             <tr>
               <th className="px-4 py-3">Статус</th>
               <th className="px-4 py-3">Количество</th>
@@ -58,7 +58,7 @@ export function DashboardPage() {
           </thead>
           <tbody>
             {Object.entries(data?.analytics.documents_by_status ?? {}).map(([status, count]) => (
-              <tr key={status} className="border-t border-slate-100">
+              <tr key={status} className="border-t border-line">
                 <td className="px-4 py-3">{status}</td>
                 <td className="px-4 py-3">{count}</td>
               </tr>

@@ -34,7 +34,7 @@ export function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-card ring-1 ring-slate-100">
+    <div className="mx-auto max-w-md rounded-2xl bg-surface-raised p-6 shadow-card ring-1 ring-line">
       <h1 className="text-2xl font-bold">Вход</h1>
       <form className="mt-6 space-y-4" onSubmit={submit}>
         <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -43,7 +43,7 @@ export function LoginPage() {
           Войти
         </Button>
       </form>
-      <p className="mt-4 text-sm text-slate-600">
+      <p className="mt-4 text-sm text-content-muted">
         Нет аккаунта?{' '}
         <Link to="/register" className="text-brand-700">
           Зарегистрироваться

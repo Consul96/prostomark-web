@@ -11,9 +11,9 @@ export function AdminCompaniesPage() {
   }
 
   return (
-    <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+    <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
       <table className="min-w-full text-left text-sm">
-        <thead className="bg-slate-50 text-slate-500">
+        <thead className="bg-surface-overlay text-content-subtle">
           <tr>
             <th className="px-4 py-3">Название</th>
             <th className="px-4 py-3">Slug</th>
@@ -23,7 +23,7 @@ export function AdminCompaniesPage() {
         </thead>
         <tbody>
           {data.map((company) => (
-            <tr key={company.id} className="border-t border-slate-100">
+            <tr key={company.id} className="border-t border-line">
               <td className="px-4 py-3">{company.name}</td>
               <td className="px-4 py-3">{company.slug}</td>
               <td className="px-4 py-3">{company.is_active ? 'Да' : 'Нет'}</td>

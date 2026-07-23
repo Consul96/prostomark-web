@@ -11,9 +11,9 @@ export function AdminSubscriptionsPage() {
   }
 
   return (
-    <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+    <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
       <table className="min-w-full text-left text-sm">
-        <thead className="bg-slate-50 text-slate-500">
+        <thead className="bg-surface-overlay text-content-subtle">
           <tr>
             <th className="px-4 py-3">Компания</th>
             <th className="px-4 py-3">Тариф</th>
@@ -23,7 +23,7 @@ export function AdminSubscriptionsPage() {
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item.id} className="border-t border-slate-100">
+            <tr key={item.id} className="border-t border-line">
               <td className="px-4 py-3">{item.company_id.slice(0, 8)}</td>
               <td className="px-4 py-3">{item.plan?.name || '-'}</td>
               <td className="px-4 py-3">{item.status}</td>

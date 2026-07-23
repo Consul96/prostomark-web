@@ -13,9 +13,9 @@ export function HistoryPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">История расчетов</h1>
-      <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+      <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-overlay text-content-subtle">
             <tr>
               <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">Сумма</th>
@@ -25,7 +25,7 @@ export function HistoryPage() {
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr key={item.id} className="border-t border-slate-100">
+              <tr key={item.id} className="border-t border-line">
                 <td className="px-4 py-3">{item.id.slice(0, 8)}</td>
                 <td className="px-4 py-3">{item.total_amount}</td>
                 <td className="px-4 py-3">{item.currency}</td>

@@ -36,9 +36,9 @@ export function ProductsPage() {
       {isLoading ? (
         <p>Загрузка...</p>
       ) : (
-        <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+        <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
           <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
+            <thead className="bg-surface-overlay text-content-subtle">
               <tr>
                 <th className="px-4 py-3">Название</th>
                 <th className="px-4 py-3">Бренд</th>
@@ -49,7 +49,7 @@ export function ProductsPage() {
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product.id} className="border-t border-slate-100">
+                <tr key={product.id} className="border-t border-line">
                   <td className="px-4 py-3">{product.name}</td>
                   <td className="px-4 py-3">{product.brand || '-'}</td>
                   <td className="px-4 py-3">{product.gtin || '-'}</td>

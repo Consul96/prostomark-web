@@ -18,9 +18,9 @@ export function FAQPage() {
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">FAQ</h1>
       {faq.map((item) => (
-        <div key={item.q} className="rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-100">
-          <h2 className="font-semibold text-slate-900">{item.q}</h2>
-          <p className="mt-2 text-slate-600">{item.a}</p>
+        <div key={item.q} className="rounded-2xl bg-surface-raised p-5 shadow-card ring-1 ring-line">
+          <h2 className="font-semibold text-content">{item.q}</h2>
+          <p className="mt-2 text-content-muted">{item.a}</p>
         </div>
       ))}
     </div>

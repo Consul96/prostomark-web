@@ -10,12 +10,12 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200/70 bg-white/90 backdrop-blur">
+      <header className="border-b border-line bg-surface-raised/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link to="/" className="font-heading text-xl font-bold text-brand-700">
             ProstoMark
           </Link>
-          <nav className="flex items-center gap-4 text-sm font-medium text-slate-600">
+          <nav className="flex items-center gap-4 text-sm font-medium text-content-muted">
             <Link to="/pricing" className="hover:text-brand-700">
               Тарифы
             </Link>

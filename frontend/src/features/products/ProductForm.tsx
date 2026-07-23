@@ -26,7 +26,7 @@ export function ProductForm({ onSubmit, loading = false }: ProductFormProps) {
   };
 
   return (
-    <form className="grid gap-3 rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-100 md:grid-cols-5" onSubmit={handleSubmit}>
+    <form className="grid gap-3 rounded-2xl bg-surface-raised p-5 shadow-card ring-1 ring-line md:grid-cols-5" onSubmit={handleSubmit}>
       <Input placeholder="Название" value={name} onChange={(e) => setName(e.target.value)} required className="md:col-span-2" />
       <Input placeholder="Бренд" value={brand} onChange={(e) => setBrand(e.target.value)} />
       <Input placeholder="GTIN" value={gtin} onChange={(e) => setGtin(e.target.value)} />

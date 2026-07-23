@@ -39,7 +39,7 @@ export function DocumentUploadForm({ onSubmit, loading = false }: DocumentUpload
   };
 
   return (
-    <form className="grid gap-3 rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-100 md:grid-cols-4" onSubmit={handleSubmit}>
+    <form className="grid gap-3 rounded-2xl bg-surface-raised p-5 shadow-card ring-1 ring-line md:grid-cols-4" onSubmit={handleSubmit}>
       <Input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required className="md:col-span-2" />
       <Input placeholder="Тип документа" value={type} onChange={(e) => setType(e.target.value)} />
       <Input placeholder="Номер" value={number} onChange={(e) => setNumber(e.target.value)} />

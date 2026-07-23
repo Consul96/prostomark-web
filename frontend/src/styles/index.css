@@ -3,22 +3,79 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Theme tokens.
+ * Values are stored as space-separated RGB channels so Tailwind's
+ * `rgb(var(--token) / <alpha-value>)` syntax can add opacity.
+ * `light` is the default; `.dark` on <html> switches the palette.
+ */
+:root {
+  color-scheme: light;
+
+  --surface: 248 250 252; /* page background */
+  --surface-raised: 255 255 255; /* cards */
+  --surface-overlay: 241 245 249; /* hover / inset chips */
+  --surface-inset: 236 240 245; /* subtle wells */
+
+  --content: 15 23 42; /* primary text */
+  --content-muted: 71 85 105; /* secondary text */
+  --content-subtle: 148 163 184; /* tertiary / captions */
+  --content-inverted: 248 250 252; /* text on accent */
+
+  --line: 226 232 240; /* borders */
+  --line-strong: 203 213 225;
+
+  --accent: 33 111 101; /* brand-600 */
+  --accent-soft: 220 239 235; /* brand-100 */
+  --accent-contrast: 255 255 255;
+
+  --shadow: 17 24 39;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --surface: 8 12 24; /* deep navy background */
+  --surface-raised: 16 23 41; /* elevated cards */
+  --surface-overlay: 26 35 58; /* hover / inset chips */
+  --surface-inset: 12 18 33; /* wells */
+
+  --content: 226 232 240;
+  --content-muted: 148 163 184;
+  --content-subtle: 100 116 139;
+  --content-inverted: 8 12 24;
+
+  --line: 34 45 68;
+  --line-strong: 51 65 96;
+
+  --accent: 89 171 156; /* brand-400 — accessible on dark */
+  --accent-soft: 25 51 47; /* deep brand tint */
+  --accent-contrast: 8 12 24;
+
+  --shadow: 0 0 0;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-:root {
-  color-scheme: light;
+body {
+  @apply bg-surface text-content font-body antialiased;
 }
 
-body {
-  @apply bg-slate-50 text-slate-800 font-body;
-  background-image: radial-gradient(circle at 10% 20%, rgba(47, 140, 127, 0.08), transparent 35%), radial-gradient(circle at 90% 0%, rgba(15, 118, 110, 0.05), transparent 40%);
+.dark body {
+  background-image: radial-gradient(circle at 12% 8%, rgba(89, 171, 156, 0.08), transparent 40%),
+    radial-gradient(circle at 88% 0%, rgba(124, 58, 237, 0.07), transparent 42%);
+}
+
+:root:not(.dark) body {
+  background-image: radial-gradient(circle at 10% 20%, rgba(47, 140, 127, 0.08), transparent 35%),
+    radial-gradient(circle at 90% 0%, rgba(15, 118, 110, 0.05), transparent 40%);
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
-  color: #f8fafc;
+  background: rgba(89, 171, 156, 0.35);
+  color: rgb(var(--content));
 }
 
 h1,
@@ -33,5 +90,10 @@ h6 {
 input,
 select,
 textarea {
-  @apply focus:outline-none focus:ring-2 focus:ring-brand-300;
+  @apply focus:outline-none focus:ring-2 focus:ring-accent/50;
+}
+
+/* Native form controls follow the active theme (date pickers, selects, scrollbars). */
+select option {
+  @apply bg-surface-raised text-content;
 }

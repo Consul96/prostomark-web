@@ -14,23 +14,23 @@ export function AnalyticsKpiGrid({
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-3xl border border-slate-200 bg-white p-5 shadow-card ring-1 ring-white/60"
+          className="rounded-3xl border border-line bg-surface-raised p-5 shadow-card"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{item.label}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-subtle">{item.label}</p>
           <p
             className={`mt-3 text-3xl font-semibold ${
               item.tone === 'danger'
-                ? 'text-rose-600'
+                ? 'text-rose-500'
                 : item.tone === 'success'
-                  ? 'text-emerald-600'
+                  ? 'text-emerald-500'
                   : item.tone === 'brand'
-                    ? 'text-brand-700'
-                    : 'text-slate-950'
+                    ? 'text-accent'
+                    : 'text-content'
             }`}
           >
             {item.available === false ? 'N/A' : item.value ?? '0'}
           </p>
-          <p className="mt-2 text-sm text-slate-500">{item.meta ?? ' '}</p>
+          <p className="mt-2 text-sm text-content-muted">{item.meta ?? ' '}</p>
         </div>
       ))}
     </div>
@@ -55,15 +55,15 @@ export function LineChart({
     .join(' ');
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-card">
+    <div className="rounded-3xl border border-line bg-surface-raised p-5 shadow-card">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Events by day</p>
-          <h3 className="mt-1 text-lg font-semibold text-slate-950">Динамика событий</h3>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-subtle">Events by day</p>
+          <h3 className="mt-1 text-lg font-semibold text-content">Динамика событий</h3>
         </div>
-        <p className="text-sm text-slate-500">{formatCompact(values.reduce((sum, value) => sum + value, 0))}</p>
+        <p className="text-sm text-content-muted">{formatCompact(values.reduce((sum, value) => sum + value, 0))}</p>
       </div>
-      <div className="mt-5 rounded-2xl bg-slate-950/95 p-4">
+      <div className="mt-5 rounded-2xl bg-surface-inset p-4 ring-1 ring-line">
         <svg viewBox="0 0 100 100" className="h-48 w-full overflow-visible">
           <defs>
             <linearGradient id="analyticsLineFill" x1="0" x2="0" y1="0" y2="1">
@@ -72,16 +72,24 @@ export function LineChart({
             </linearGradient>
           </defs>
           {[0, 25, 50, 75, 100].map((guide) => (
-            <line key={guide} x1="0" y1={guide} x2="100" y2={guide} stroke="rgba(255,255,255,0.08)" strokeWidth="0.6" />
+            <line
+              key={guide}
+              x1="0"
+              y1={guide}
+              x2="100"
+              y2={guide}
+              stroke="rgb(var(--line))"
+              strokeWidth="0.6"
+            />
           ))}
           <polyline fill="none" stroke={color} strokeWidth="2.5" points={points} vectorEffect="non-scaling-stroke" />
           <polygon fill="url(#analyticsLineFill)" points={`0,100 ${points} 100,100`} />
         </svg>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] text-slate-300 md:grid-cols-6">
+        <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] text-content-muted md:grid-cols-6">
           {buckets.slice(-6).map((bucket) => (
-            <div key={bucket.date} className="rounded-xl bg-white/5 px-2 py-1">
+            <div key={bucket.date} className="rounded-xl bg-surface-overlay px-2 py-1">
               <p>{bucket.date.slice(5)}</p>
-              <p className="font-semibold text-white">{bucket.total}</p>
+              <p className="font-semibold text-content">{bucket.total}</p>
             </div>
           ))}
         </div>
@@ -102,12 +110,12 @@ export function DonutChart({
   let offset = 0;
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-card">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{title}</p>
+    <div className="rounded-3xl border border-line bg-surface-raised p-5 shadow-card">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-subtle">{title}</p>
       <div className="mt-4 flex items-center gap-6">
         <div className="relative">
           <svg viewBox="0 0 120 120" className="h-36 w-36 -rotate-90">
-            <circle cx="60" cy="60" r="42" fill="none" stroke="#e2e8f0" strokeWidth="16" />
+            <circle cx="60" cy="60" r="42" fill="none" stroke="rgb(var(--surface-overlay))" strokeWidth="16" />
             {items.map((item, index) => {
               const length = total === 0 ? 0 : (item.value / total) * 264;
               const segment = (
@@ -129,8 +137,8 @@ export function DonutChart({
             })}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Total</p>
-            <p className="text-2xl font-semibold text-slate-950">{total}</p>
+            <p className="text-xs uppercase tracking-[0.16em] text-content-subtle">Total</p>
+            <p className="text-2xl font-semibold text-content">{total}</p>
           </div>
         </div>
         <div className="flex-1 space-y-3">
@@ -138,9 +146,9 @@ export function DonutChart({
             <div key={item.key} className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="h-3 w-3 rounded-full" style={{ backgroundColor: palette[index % palette.length] }} />
-                <p className="text-sm text-slate-700">{item.label}</p>
+                <p className="text-sm text-content-muted">{item.label}</p>
               </div>
-              <p className="text-sm font-semibold text-slate-950">{item.value}</p>
+              <p className="text-sm font-semibold text-content">{item.value}</p>
             </div>
           ))}
         </div>
@@ -160,15 +168,15 @@ export function StackedBarChart({
   const palette = ['#f97316', '#0f172a', '#2563eb', '#0d9488', '#dc2626', '#7c3aed'];
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-card">
+    <div className="rounded-3xl border border-line bg-surface-raised p-5 shadow-card">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Breakdown</p>
-          <h3 className="mt-1 text-lg font-semibold text-slate-950">{title}</h3>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-subtle">Breakdown</p>
+          <h3 className="mt-1 text-lg font-semibold text-content">{title}</h3>
         </div>
-        <p className="text-sm text-slate-500">{total} total</p>
+        <p className="text-sm text-content-muted">{total} total</p>
       </div>
-      <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-surface-overlay">
         {items.map((item, index) => (
           <div
             key={item.key}
@@ -181,10 +189,10 @@ export function StackedBarChart({
           <div key={item.key} className="flex items-center gap-4">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <span className="h-3 w-3 rounded-full" style={{ backgroundColor: palette[index % palette.length] }} />
-              <p className="truncate text-sm text-slate-700">{item.label}</p>
+              <p className="truncate text-sm text-content-muted">{item.label}</p>
             </div>
-            <p className="w-20 text-right text-sm font-semibold text-slate-950">{item.value}</p>
-            <p className="w-16 text-right text-sm text-slate-500">
+            <p className="w-20 text-right text-sm font-semibold text-content">{item.value}</p>
+            <p className="w-16 text-right text-sm text-content-subtle">
               {total === 0 ? '0%' : `${Math.round((item.value / total) * 100)}%`}
             </p>
           </div>

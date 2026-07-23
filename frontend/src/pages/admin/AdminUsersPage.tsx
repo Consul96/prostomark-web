@@ -41,9 +41,9 @@ export function AdminUsersPage() {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={submit} className="grid gap-3 rounded-2xl bg-white p-4 shadow-card ring-1 ring-slate-100 md:grid-cols-3">
+      <form onSubmit={submit} className="grid gap-3 rounded-2xl bg-surface-raised p-4 shadow-card ring-1 ring-line md:grid-cols-3">
         <select
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+          className="rounded-xl border border-line bg-surface-raised px-3 py-2 text-sm"
           value={form.company_id}
           onChange={(e) => setForm((prev) => ({ ...prev, company_id: e.target.value }))}
           required
@@ -59,7 +59,7 @@ export function AdminUsersPage() {
         <Input placeholder="Имя" value={form.first_name} onChange={(e) => setForm((prev) => ({ ...prev, first_name: e.target.value }))} required />
         <Input placeholder="Фамилия" value={form.last_name} onChange={(e) => setForm((prev) => ({ ...prev, last_name: e.target.value }))} required />
         <select
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+          className="rounded-xl border border-line bg-surface-raised px-3 py-2 text-sm"
           value={form.role}
           onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value as typeof prev.role }))}
           required
@@ -81,9 +81,9 @@ export function AdminUsersPage() {
         </Button>
       </form>
 
-      <div className="overflow-auto rounded-2xl bg-white shadow-card ring-1 ring-slate-100">
+      <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-overlay text-content-subtle">
             <tr>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Имя</th>
@@ -93,7 +93,7 @@ export function AdminUsersPage() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-t border-slate-100">
+              <tr key={user.id} className="border-t border-line">
                 <td className="px-4 py-3">{user.email}</td>
                 <td className="px-4 py-3">{user.first_name} {user.last_name}</td>
                 <td className="px-4 py-3">{user.role}</td>

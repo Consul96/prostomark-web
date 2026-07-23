@@ -2,7 +2,10 @@ import { PropsWithChildren, useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
+import { useThemeEffect } from '../hooks/useTheme';
+
 export function AppProviders({ children }: PropsWithChildren) {
+  useThemeEffect();
   const client = useMemo(
     () =>
       new QueryClient({
@@ -22,7 +25,16 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={client}>
       {children}
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: 'rgb(var(--surface-raised))',
+            color: 'rgb(var(--content))',
+            border: '1px solid rgb(var(--line))',
+          },
+        }}
+      />
     </QueryClientProvider>
   );
 }

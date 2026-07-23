@@ -10,11 +10,11 @@ export function PricingPage() {
       <h1 className="text-3xl font-bold">Тарифы</h1>
       <div className="grid gap-4 md:grid-cols-3">
         {plans.map((plan) => (
-          <article key={plan.name} className="rounded-2xl bg-white p-5 shadow-card ring-1 ring-slate-100">
+          <article key={plan.name} className="rounded-2xl bg-surface-raised p-5 shadow-card ring-1 ring-line">
             <h2 className="text-xl font-bold">{plan.name}</h2>
             <p className="mt-2 text-2xl font-semibold text-brand-700">{plan.price}</p>
-            <p className="mt-1 text-sm text-slate-500">{plan.description}</p>
-            <ul className="mt-4 space-y-1 text-sm text-slate-700">
+            <p className="mt-1 text-sm text-content-subtle">{plan.description}</p>
+            <ul className="mt-4 space-y-1 text-sm text-content-muted">
               {plan.features.map((feature) => (
                 <li key={feature}>• {feature}</li>
               ))}

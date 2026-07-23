@@ -26,25 +26,25 @@ export function SettingsPage() {
 
       <Card>
         <h2 className="text-lg font-semibold">Профиль</h2>
-        <p className="mt-2 text-sm text-slate-600">{user?.first_name} {user?.last_name}</p>
-        <p className="text-sm text-slate-600">{user?.email}</p>
-        <p className="text-sm text-slate-600">Роль: {user?.role}</p>
+        <p className="mt-2 text-sm text-content-muted">{user?.first_name} {user?.last_name}</p>
+        <p className="text-sm text-content-muted">{user?.email}</p>
+        <p className="text-sm text-content-muted">Роль: {user?.role}</p>
       </Card>
 
       <Card>
         <h2 className="text-lg font-semibold">Биллинг</h2>
         {isLoading ? (
-          <p className="mt-2 text-sm text-slate-500">Загрузка...</p>
+          <p className="mt-2 text-sm text-content-subtle">Загрузка...</p>
         ) : (
           <>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-content-muted">
               Текущая подписка: {data?.subscription?.plan?.name ?? 'Нет активного тарифа'} ({data?.subscription?.status ?? 'n/a'})
             </p>
             <div className="mt-4 grid gap-3 md:grid-cols-3">
               {data?.available_plans.map((plan) => (
-                <div key={plan.id} className="rounded-xl border border-slate-200 p-3">
+                <div key={plan.id} className="rounded-xl border border-line p-3">
                   <p className="font-semibold">{plan.name}</p>
-                  <p className="text-sm text-slate-500">{plan.price_month} ₽ / мес</p>
+                  <p className="text-sm text-content-subtle">{plan.price_month} ₽ / мес</p>
                   <div className="mt-3 flex gap-2">
                     <Button onClick={() => checkoutMutation.mutate({ code: plan.code, cycle: 'month' })}>
                       Оформить
