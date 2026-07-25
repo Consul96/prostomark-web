@@ -6,8 +6,6 @@ import base64
 import uuid
 from datetime import UTC, datetime, timedelta
 
-import pytest
-
 from app.models.enums import SignJobStatus
 from app.models.marking import SignerAgent, SignJob
 from app.security.tokens import hash_token
@@ -297,7 +295,7 @@ def test_agent_expired_job(client, seed, db):
 def test_agent_duplicate_result(client, seed, db):
     h = auth_headers(seed['users']['company_admin'])
     _, api_key = _register_agent(client, h)
-    job = _seed_sign_job(db, seed['company_a'].id)
+    _seed_sign_job(db, seed['company_a'].id)
     claim = client.get(f'{BASE}/sign-agent/next-job', headers={'X-Agent-Api-Key': api_key}).json()
     payload = base64.b64decode(claim['payload_base64'])
     body = {'job_id': claim['job_id'], 'signature_base64': MockSigner().sign(payload, detached=True, thumbprint=None),

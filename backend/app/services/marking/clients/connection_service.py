@@ -26,7 +26,7 @@ from app.models.marking import CrptClient, SignerAgent
 from app.services.marking import guard
 from app.services.marking.auth import token_cache as tc
 from app.services.marking.auth.mchd_service import evaluate_mchd_status
-from app.services.marking.auth.sign_service import MockSigner, create_sign_job, payload_sha256, wait_for_signature
+from app.services.marking.auth.sign_service import MockSigner, create_sign_job, wait_for_signature
 from app.services.marking.auth.suz_token_manager import SuzTokenManager
 from app.services.marking.auth.true_api_token_manager import TrueApiTokenManager
 from app.services.marking.clients.client_service import record_connection_check
