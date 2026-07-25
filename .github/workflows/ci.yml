@@ -8,6 +8,38 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: prostomark
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d prostomark"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/prostomark
+      TEST_DATABASE_URL: postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/prostomark_test
+      TEST_AUTH_PG_URL: postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/postgres
+      REDIS_URL: redis://127.0.0.1:6379/0
+      JWT_SECRET: ci-test-secret
+      CRPT_ENV: sandbox
+      CRPT_ALLOW_PRODUCTION: 'false'
+      CRPT_DRY_RUN: 'true'
     defaults:
       run:
         working-directory: backend
@@ -20,9 +52,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Create test database
+        env:
+          PGPASSWORD: postgres
+        run: psql -h 127.0.0.1 -U postgres -d postgres -c "CREATE DATABASE prostomark_test"
+      - name: Alembic upgrade head
+        run: alembic upgrade head
       - name: Lint
         run: ruff check app tests --select F,E9
-      - name: Test
+      - name: Auth enum tests (PostgreSQL, no skips)
+        run: pytest tests/test_auth_role_enum.py -q
+      - name: Full backend test suite
         run: pytest
 
   frontend:
@@ -39,11 +79,11 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
-      - name: Lint
+      - name: TypeScript check
         run: npm run lint
-      - name: Test
+      - name: Frontend tests
         run: npm run test
-      - name: Build
+      - name: Frontend build
         run: npm run build
 
   docker:

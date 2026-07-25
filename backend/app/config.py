@@ -47,6 +47,28 @@ class Settings(BaseSettings):
     analytics_ai_usage_file: Path = Path('storage/analytics/ai_usage_log.txt')
     analytics_runtime_metrics_file: Path | None = None
 
+    # --- Честный знак / маркировка (модуль marking) ---
+    # Окружение ГИС МТ: sandbox | production. По умолчанию sandbox.
+    crpt_env: str = 'sandbox'
+    # Базовые URL. Значения по умолчанию — песочница (см. docs/marking/crpt-api-mapping.md).
+    crpt_true_api_base_url: str = 'https://markirovka.sandbox.crptech.ru/api/v3/true-api'
+    crpt_true_api_v4_base_url: str = 'https://markirovka.sandbox.crptech.ru/api/v4/true-api'
+    crpt_suz_base_url: str = 'https://markirovka.sandbox.crptech.ru'
+    crpt_nk_base_url: str = 'https://апи.национальный-каталог.рф'
+    # Явный предохранитель production. Без true продакшн-вызовы запрещены.
+    crpt_allow_production: bool = False
+    # Dry-run: юридически значимые операции не отправляются во внешние системы.
+    crpt_dry_run: bool = True
+    # Зашифрованное файловое хранилище КМ и чувствительных выгрузок.
+    marking_storage_path: Path = Path('storage/marking')
+    # Ключ шифрования (base64 urlsafe, 32 байта) для AES-GCM хранилища КМ и HMAC km_hash.
+    marking_encryption_key: str = ''
+    # Sign Agent (подпись через выносной агент CryptoPro).
+    sign_job_ttl_seconds: int = 900
+    sign_agent_poll_seconds: int = 5
+    # Таймаут HTTP-клиентов ГИС МТ, секунды.
+    crpt_http_timeout: float = 30.0
+
 
 @lru_cache
 def get_settings() -> Settings:
