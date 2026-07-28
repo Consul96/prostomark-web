@@ -25,6 +25,10 @@ export function MarkingDashboardPage() {
   if (isLoading) return <p className="text-slate-500">Загрузка…</p>;
   if (!data) return <p className="text-slate-500">Нет данных</p>;
 
+  // Keep the dashboard usable with stale/cached responses from before
+  // the `attention` field was added to the API contract.
+  const attention = Array.isArray(data.attention) ? data.attention : [];
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
@@ -38,11 +42,11 @@ export function MarkingDashboardPage() {
 
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         <h2 className="mb-3 font-heading text-lg font-semibold text-slate-900">Требуют внимания</h2>
-        {data.attention.length === 0 ? (
+        {attention.length === 0 ? (
           <p className="text-sm text-slate-500">Нет требующих внимания действий</p>
         ) : (
           <ul className="space-y-2">
-            {data.attention.map((a, i) => (
+            {attention.map((a, i) => (
               <li key={i} className="flex items-center justify-between rounded-lg bg-amber-50 px-3 py-2 text-sm">
                 <span className="text-amber-900">{a.message}</span>
                 <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-semibold text-amber-900">{a.count}</span>
