@@ -42,7 +42,11 @@ function manualChunks(id: string): string | undefined {
   return 'vendor';
 }
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // In production the app is served under /app/ by the system nginx
+  // (root /var/www/prostomark-app, `location ^~ /app/`), so hashed assets must
+  // be referenced as /app/assets/*. The dev server stays at the root path.
+  base: command === 'build' ? '/app/' : '/',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
@@ -66,4 +70,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
