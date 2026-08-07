@@ -1,0 +1,19 @@
+# Build-context excludes for the root-context frontend image (and others).
+# Keeps the Docker build fast and avoids copying local artifacts into the image.
+**/node_modules
+**/dist
+**/build
+**/.next
+**/.venv
+**/venv
+**/__pycache__
+**/*.pyc
+**/*.log
+.git
+.github
+.DS_Store
+.env
+.env.*
+!**/.env.example
+storage
+backend/storage

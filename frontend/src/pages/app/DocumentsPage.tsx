@@ -3,12 +3,14 @@ import toast from 'react-hot-toast';
 
 import { documentsApi } from '../../api/documents';
 import { Button } from '../../components/ui/Button';
+import { QueryState } from '../../components/ui/QueryState';
 import { DocumentUploadForm } from '../../features/documents/DocumentUploadForm';
 import { formatDate } from '../../shared/format';
 
 export function DocumentsPage() {
   const queryClient = useQueryClient();
-  const { data: docs = [], isLoading } = useQuery({ queryKey: ['documents'], queryFn: documentsApi.list });
+  const documentsQuery = useQuery({ queryKey: ['documents'], queryFn: documentsApi.list });
+  const docs = documentsQuery.data ?? [];
 
   const uploadMutation = useMutation({
     mutationFn: documentsApi.upload,
@@ -34,9 +36,7 @@ export function DocumentsPage() {
 
       <DocumentUploadForm onSubmit={(payload) => uploadMutation.mutateAsync(payload)} loading={uploadMutation.isPending} />
 
-      {isLoading ? (
-        <p>Загрузка...</p>
-      ) : (
+      <QueryState query={documentsQuery}>
         <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-surface-overlay text-content-subtle">
@@ -67,7 +67,7 @@ export function DocumentsPage() {
             </tbody>
           </table>
         </div>
-      )}
+      </QueryState>
     </div>
   );
 }

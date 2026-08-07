@@ -4,11 +4,14 @@ import toast from 'react-hot-toast';
 import { billingApi } from '../../api/billing';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { QueryState } from '../../components/ui/QueryState';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { useAuthStore } from '../../store/authStore';
 
 export function SettingsPage() {
   const user = useAuthStore((state) => state.user);
-  const { data, isLoading } = useQuery({ queryKey: ['billing-current-plan'], queryFn: billingApi.currentPlan });
+  const billingQuery = useQuery({ queryKey: ['billing-current-plan'], queryFn: billingApi.currentPlan });
+  const data = billingQuery.data;
 
   const checkoutMutation = useMutation({
     mutationFn: ({ code, cycle }: { code: string; cycle: 'month' | 'year' }) => billingApi.checkout(code, cycle),
@@ -33,9 +36,19 @@ export function SettingsPage() {
 
       <Card>
         <h2 className="text-lg font-semibold">Биллинг</h2>
-        {isLoading ? (
-          <p className="mt-2 text-sm text-content-subtle">Загрузка...</p>
-        ) : (
+        <QueryState
+          query={billingQuery}
+          skeleton={
+            <div className="mt-2 space-y-3">
+              <Skeleton className="h-5 w-64" />
+              <div className="grid gap-3 md:grid-cols-3">
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+              </div>
+            </div>
+          }
+        >
           <>
             <p className="mt-2 text-sm text-content-muted">
               Текущая подписка: {data?.subscription?.plan?.name ?? 'Нет активного тарифа'} ({data?.subscription?.status ?? 'n/a'})
@@ -54,7 +67,7 @@ export function SettingsPage() {
               ))}
             </div>
           </>
-        )}
+        </QueryState>
       </Card>
     </div>
   );

@@ -3,12 +3,14 @@ import toast from 'react-hot-toast';
 
 import { productsApi } from '../../api/products';
 import { Button } from '../../components/ui/Button';
+import { QueryState } from '../../components/ui/QueryState';
 import { ProductForm } from '../../features/products/ProductForm';
 import { formatDate } from '../../shared/format';
 
 export function ProductsPage() {
   const queryClient = useQueryClient();
-  const { data: products = [], isLoading } = useQuery({ queryKey: ['products'], queryFn: productsApi.list });
+  const productsQuery = useQuery({ queryKey: ['products'], queryFn: productsApi.list });
+  const products = productsQuery.data ?? [];
 
   const createMutation = useMutation({
     mutationFn: productsApi.create,
@@ -33,9 +35,7 @@ export function ProductsPage() {
       <h1 className="text-2xl font-bold">Товары</h1>
       <ProductForm onSubmit={(payload) => createMutation.mutateAsync(payload)} loading={createMutation.isPending} />
 
-      {isLoading ? (
-        <p>Загрузка...</p>
-      ) : (
+      <QueryState query={productsQuery}>
         <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-surface-overlay text-content-subtle">
@@ -64,7 +64,7 @@ export function ProductsPage() {
             </tbody>
           </table>
         </div>
-      )}
+      </QueryState>
     </div>
   );
 }

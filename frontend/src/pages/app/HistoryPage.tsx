@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { calculationsApi } from '../../api/calculations';
+import { QueryState } from '../../components/ui/QueryState';
 import { formatDate } from '../../shared/format';
 
 export function HistoryPage() {
-  const { data = [], isLoading } = useQuery({ queryKey: ['calculations'], queryFn: calculationsApi.list });
-
-  if (isLoading) {
-    return <p>Загрузка...</p>;
-  }
+  const query = useQuery({ queryKey: ['calculations'], queryFn: calculationsApi.list });
+  const data = query.data ?? [];
 
   return (
+    <QueryState query={query}>
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">История расчетов</h1>
       <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
@@ -36,5 +35,6 @@ export function HistoryPage() {
         </table>
       </div>
     </div>
+    </QueryState>
   );
 }

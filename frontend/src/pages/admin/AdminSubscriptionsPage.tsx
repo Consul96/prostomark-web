@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { adminApi } from '../../api/admin';
+import { QueryState } from '../../components/ui/QueryState';
 import { formatDate } from '../../shared/format';
 
 export function AdminSubscriptionsPage() {
-  const { data = [], isLoading } = useQuery({ queryKey: ['admin-subscriptions'], queryFn: adminApi.subscriptions });
-
-  if (isLoading) {
-    return <p>Загрузка...</p>;
-  }
+  const query = useQuery({ queryKey: ['admin-subscriptions'], queryFn: adminApi.subscriptions });
+  const data = query.data ?? [];
 
   return (
+    <QueryState query={query}>
     <div className="overflow-auto rounded-2xl bg-surface-raised shadow-card ring-1 ring-line">
       <table className="min-w-full text-left text-sm">
         <thead className="bg-surface-overlay text-content-subtle">
@@ -33,5 +32,6 @@ export function AdminSubscriptionsPage() {
         </tbody>
       </table>
     </div>
+    </QueryState>
   );
 }
