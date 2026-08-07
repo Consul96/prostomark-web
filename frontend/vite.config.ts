@@ -13,11 +13,13 @@ import react from '@vitejs/plugin-react';
 function manualChunks(id: string): string | undefined {
   if (!id.includes('node_modules')) return undefined;
 
-  // React runtime + router — needed on every route.
+  // React runtime — needed on every route. Kept to leaf runtime packages only
+  // (react / react-dom / scheduler). react-router is intentionally left in the
+  // general `vendor` chunk to avoid a circular chunk dependency
+  // (vendor <-> vendor-react).
   if (
     id.includes('node_modules/react/') ||
     id.includes('node_modules/react-dom/') ||
-    id.includes('node_modules/react-router') ||
     id.includes('node_modules/scheduler/')
   ) {
     return 'vendor-react';
