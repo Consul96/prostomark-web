@@ -12,6 +12,7 @@ import type {
   AnalyticsPhotoRecord,
 } from '../../api/types';
 import { Card } from '../../components/ui/Card';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { Table } from '../../components/ui/Table';
 import { useAuthStore } from '../../store/authStore';
 import { formatDate } from '../../shared/format';
@@ -383,7 +384,13 @@ export function AnalyticsPage() {
         })}
       </div>
 
-      {summaryQuery.isLoading ? <p className="text-sm text-content-subtle">Загрузка summary...</p> : null}
+      {summaryQuery.isLoading ? (
+        <div className="grid gap-4 md:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24" />
+          ))}
+        </div>
+      ) : null}
       {summaryQuery.isError ? <ErrorState error={summaryQuery.error} retry={() => summaryQuery.refetch()} /> : null}
 
       {activeTab === 'summary' && summaryQuery.data ? (

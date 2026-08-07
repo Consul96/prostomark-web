@@ -63,24 +63,17 @@ services:
       redis:
         condition: service_started
 
+  # Frontend is now the production web server: an nginx image with the built
+  # Vite `dist/` baked in. It serves static assets directly and reverse-proxies
+  # /api/ to the backend. There is no separate vite-preview process and no
+  # standalone nginx container anymore.
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     container_name: prostomark-frontend
-    env_file:
-      - .env
-    ports:
-      - '4173:4173'
-
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: prostomark-nginx
     depends_on:
       - backend
-      - frontend
-    volumes:
-      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - '80:80'
 

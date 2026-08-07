@@ -2,18 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 
 import { dashboardApi } from '../../api/dashboard';
 import { Card } from '../../components/ui/Card';
+import { QueryState } from '../../components/ui/QueryState';
 import { Table } from '../../components/ui/Table';
 import { formatDate } from '../../shared/format';
 import { StatCard } from '../../widgets/StatCard';
 
 export function DashboardPage() {
-  const { data, isLoading } = useQuery({ queryKey: ['dashboard-summary'], queryFn: dashboardApi.summary });
-
-  if (isLoading) {
-    return <p>Загрузка...</p>;
-  }
+  const query = useQuery({ queryKey: ['dashboard-summary'], queryFn: dashboardApi.summary });
+  const { data } = query;
 
   return (
+    <QueryState query={query}>
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard title="Товары" value={data?.products_count ?? 0} />
@@ -67,5 +66,6 @@ export function DashboardPage() {
         </table>
       </Table>
     </div>
+    </QueryState>
   );
 }

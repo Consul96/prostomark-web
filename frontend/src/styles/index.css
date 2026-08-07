@@ -1,4 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+/*
+ * Self-hosted fonts (bundled via @fontsource) instead of the Google Fonts CDN.
+ * Corporate firewalls / VPNs often throttle or block fonts.googleapis.com and
+ * fonts.gstatic.com, which previously blocked first paint. These files are
+ * emitted into /assets with content hashes and served with immutable caching.
+ * Manrope ships Cyrillic subsets (unicode-range) so the RU UI renders correctly.
+ */
+@import '@fontsource/manrope/400.css';
+@import '@fontsource/manrope/500.css';
+@import '@fontsource/manrope/600.css';
+@import '@fontsource/manrope/700.css';
+@import '@fontsource/manrope/800.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/700.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
