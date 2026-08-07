@@ -4,29 +4,30 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { RoleRoute } from '../components/RoleRoute';
 import { RouteFallback } from '../components/RouteFallback';
-// Layouts stay eager: they are tiny, shared by every route, and keeping them in
-// the main bundle avoids a second skeleton flash around the page content.
+// Layouts stay eager: they are tiny, shared across their section, and keeping
+// them in the main bundle avoids a second skeleton flash around page content.
 import { AdminLayout } from '../layouts/AdminLayout';
 import { AppLayout } from '../layouts/AppLayout';
 import { PublicLayout } from '../layouts/PublicLayout';
+import { MarkingLayout } from '../pages/app/marking/MarkingLayout';
 
 /**
  * Route-level code splitting.
  *
  * Each page below is loaded on demand, so a user who opens the Dashboard does
- * NOT download the code for Analytics, Admin, the marketing pages, etc. Vite
+ * NOT download the code for Analytics, Admin, the marking module, etc. Vite
  * emits a separate chunk per dynamic import; pages that live together
- * (e.g. the admin screens) naturally form their own logical group.
+ * (e.g. the admin or marking screens) naturally form their own logical group.
  *
  * The pages use named exports, so we map them to the `default` shape React.lazy
  * expects. `withSuspense` wraps each element in a Suspense boundary that shows a
  * skeleton while the chunk downloads.
  */
-function lazyPage<T extends Record<string, ComponentType<unknown>>>(
+function lazyPage<T extends Record<string, ComponentType<never>>>(
   loader: () => Promise<T>,
   name: keyof T,
 ) {
-  return lazy(() => loader().then((mod) => ({ default: mod[name] })));
+  return lazy(() => loader().then((mod) => ({ default: mod[name] as ComponentType<unknown> })));
 }
 
 function withSuspense(element: ReactNode): ReactNode {
@@ -48,6 +49,26 @@ const ProductsPage = lazyPage(() => import('../pages/app/ProductsPage'), 'Produc
 const DocumentsPage = lazyPage(() => import('../pages/app/DocumentsPage'), 'DocumentsPage');
 const HistoryPage = lazyPage(() => import('../pages/app/HistoryPage'), 'HistoryPage');
 const SettingsPage = lazyPage(() => import('../pages/app/SettingsPage'), 'SettingsPage');
+
+// ── marking (Честный знак) ───────────────────────────────────────────────────
+const MarkingDashboardPage = lazyPage(
+  () => import('../pages/app/marking/MarkingDashboardPage'),
+  'MarkingDashboardPage',
+);
+const MarkingClientsPage = lazyPage(() => import('../pages/app/marking/MarkingClientsPage'), 'MarkingClientsPage');
+const MarkingApplicationsPage = lazyPage(
+  () => import('../pages/app/marking/MarkingApplicationsPage'),
+  'MarkingApplicationsPage',
+);
+const MarkingHistoryPage = lazyPage(() => import('../pages/app/marking/MarkingHistoryPage'), 'MarkingHistoryPage');
+const MarkingSignAgentsPage = lazyPage(
+  () => import('../pages/app/marking/MarkingSignAgentsPage'),
+  'MarkingSignAgentsPage',
+);
+const MarkingPlaceholderPage = lazyPage(
+  () => import('../pages/app/marking/MarkingPlaceholderPage'),
+  'MarkingPlaceholderPage',
+) as ComponentType<{ title: string; phase: string }>;
 
 // ── admin ───────────────────────────────────────────────────────────────────
 const AdminHomePage = lazyPage(() => import('../pages/admin/AdminHomePage'), 'AdminHomePage');
@@ -93,6 +114,35 @@ export const router = createBrowserRouter([
           { path: 'documents', element: withSuspense(<DocumentsPage />) },
           { path: 'history', element: withSuspense(<HistoryPage />) },
           { path: 'settings', element: withSuspense(<SettingsPage />) },
+          {
+            path: 'marking',
+            element: <MarkingLayout />,
+            children: [
+              { index: true, element: withSuspense(<MarkingDashboardPage />) },
+              { path: 'clients', element: withSuspense(<MarkingClientsPage />) },
+              { path: 'applications', element: withSuspense(<MarkingApplicationsPage />) },
+              {
+                path: 'products',
+                element: withSuspense(
+                  <MarkingPlaceholderPage title="Товары и GTIN" phase="Phase 2 (Национальный каталог)" />,
+                ),
+              },
+              {
+                path: 'km-orders',
+                element: withSuspense(<MarkingPlaceholderPage title="Заказы КМ" phase="Phase 3 (СУЗ)" />),
+              },
+              {
+                path: 'application-reports',
+                element: withSuspense(<MarkingPlaceholderPage title="Контроль нанесения" phase="Phase 4" />),
+              },
+              {
+                path: 'circulation',
+                element: withSuspense(<MarkingPlaceholderPage title="Ввод в оборот" phase="Phase 5" />),
+              },
+              { path: 'sign-agents', element: withSuspense(<MarkingSignAgentsPage />) },
+              { path: 'history', element: withSuspense(<MarkingHistoryPage />) },
+            ],
+          },
         ],
       },
       {

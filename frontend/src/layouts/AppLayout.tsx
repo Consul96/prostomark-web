@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LogOut,
   Package,
+  ScanLine,
   Settings,
   type LucideIcon,
 } from 'lucide-react';
@@ -29,6 +30,7 @@ const navigation: NavigationItem[] = [
   { to: '/app/analytics', label: 'Аналитика', icon: BarChart3, roles: ['superadmin', 'manager'] },
   { to: '/app/calculator', label: 'Калькулятор', icon: Calculator },
   { to: '/app/products', label: 'Товары', icon: Package },
+  { to: '/app/marking', label: 'Честный знак', icon: ScanLine },
   { to: '/app/documents', label: 'Документы', icon: FileText },
   { to: '/app/history', label: 'История', icon: History },
   { to: '/app/settings', label: 'Настройки', icon: Settings },
