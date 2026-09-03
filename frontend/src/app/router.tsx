@@ -47,6 +47,7 @@ const CalculatorPage = lazyPage(() => import('../pages/app/CalculatorPage'), 'Ca
 const AnalyticsPage = lazyPage(() => import('../pages/app/AnalyticsPage'), 'AnalyticsPage');
 const ProductsPage = lazyPage(() => import('../pages/app/ProductsPage'), 'ProductsPage');
 const DocumentsPage = lazyPage(() => import('../pages/app/DocumentsPage'), 'DocumentsPage');
+const PdfDateToolPage = lazyPage(() => import('../pages/app/PdfDateToolPage'), 'PdfDateToolPage');
 const HistoryPage = lazyPage(() => import('../pages/app/HistoryPage'), 'HistoryPage');
 const SettingsPage = lazyPage(() => import('../pages/app/SettingsPage'), 'SettingsPage');
 
@@ -112,6 +113,7 @@ export const router = createBrowserRouter([
           },
           { path: 'products', element: withSuspense(<ProductsPage />) },
           { path: 'documents', element: withSuspense(<DocumentsPage />) },
+          { path: 'pdf-date-tool', element: withSuspense(<PdfDateToolPage />) },
           { path: 'history', element: withSuspense(<HistoryPage />) },
           { path: 'settings', element: withSuspense(<SettingsPage />) },
           {
