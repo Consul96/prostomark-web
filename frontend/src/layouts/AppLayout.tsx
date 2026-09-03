@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import {
   BarChart3,
   Calculator,
+  CalendarRange,
   FileText,
   History,
   LayoutDashboard,
@@ -32,6 +33,7 @@ const navigation: NavigationItem[] = [
   { to: '/app/products', label: 'Товары', icon: Package },
   { to: '/app/marking', label: 'Честный знак', icon: ScanLine },
   { to: '/app/documents', label: 'Документы', icon: FileText },
+  { to: '/app/pdf-date-tool', label: 'Даты PDF', icon: CalendarRange },
   { to: '/app/history', label: 'История', icon: History },
   { to: '/app/settings', label: 'Настройки', icon: Settings },
 ];
