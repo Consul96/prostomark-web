@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
+from app.routers import sales
 from app.routers import admin, analytics, auth, billing, calculations, dashboard, documents, marking, products
 from app.services.marking.errors import MarkingError
 
@@ -19,6 +20,7 @@ def create_app() -> FastAPI:
     )
 
     api_prefix = settings.api_v1_prefix
+    app.include_router(sales.router, prefix=api_prefix)
     app.include_router(auth.router, prefix=api_prefix)
     app.include_router(products.router, prefix=api_prefix)
     app.include_router(documents.router, prefix=api_prefix)

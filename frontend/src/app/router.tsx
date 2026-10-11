@@ -50,6 +50,8 @@ const DocumentsPage = lazyPage(() => import('../pages/app/DocumentsPage'), 'Docu
 const HistoryPage = lazyPage(() => import('../pages/app/HistoryPage'), 'HistoryPage');
 const SettingsPage = lazyPage(() => import('../pages/app/SettingsPage'), 'SettingsPage');
 
+const SalesPage = lazyPage(() => import('../pages/app/sales/SalesPage'), 'SalesPage');
+
 // ── marking (Честный знак) ───────────────────────────────────────────────────
 const MarkingDashboardPage = lazyPage(
   () => import('../pages/app/marking/MarkingDashboardPage'),
@@ -110,6 +112,7 @@ export const router = createBrowserRouter([
             element: <RoleRoute allowed={['superadmin', 'manager']} />,
             children: [{ path: 'analytics', element: withSuspense(<AnalyticsPage />) }],
           },
+          ...['sales/orders', 'sales/orders/new', 'sales/orders/:id', 'sales/customers', 'sales/customers/:id', 'sales/documents', 'sales/sellers'].map(path => ({ path, element: withSuspense(<SalesPage />) })),
           { path: 'products', element: withSuspense(<ProductsPage />) },
           { path: 'documents', element: withSuspense(<DocumentsPage />) },
           { path: 'history', element: withSuspense(<HistoryPage />) },

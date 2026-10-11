@@ -58,3 +58,13 @@ __all__ = [
     'RefreshToken',
     'User',
 ]
+
+# Register sales tables for Alembic and test metadata.
+from app.models.sales import (
+    SalesCustomer, SalesSeller, SalesOrder, SalesOrderItem,
+    SalesDocumentTemplate, SalesDocument, SalesDocumentFile, SalesDocumentSequence,
+)
+__all__ += [
+    'SalesCustomer', 'SalesSeller', 'SalesOrder', 'SalesOrderItem',
+    'SalesDocumentTemplate', 'SalesDocument', 'SalesDocumentFile', 'SalesDocumentSequence',
+]
