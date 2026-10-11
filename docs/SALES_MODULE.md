@@ -115,7 +115,7 @@ npm run dev
 - Миграция upgrade → downgrade → upgrade: проходит; синтетические пользователи и каталог остаются на месте, создаются 8 таблиц и 3 шаблона.
 - Playwright с настоящим backend: вход → продавец → покупатель → заказ → reload → подтверждение → preview → сохранённые XLSX/PDF. Нет ошибок JavaScript и неуспешных API-запросов.
 - PDF отрисован Poppler и проверен визуально; снимки интерфейса сделаны для светлой/тёмной темы и мобильного экрана.
-- Docker-образ не собирался: Docker отсутствует в среде выполнения. Перед production нужна сборка и smoke test контейнера.
+- Локально Docker отсутствовал. GitHub CI собрал backend/worker и подтвердил тесты; существующий шаг frontend Docker build исправлен на корневой context, который требует текущий Dockerfile. Итоговую сборку проверяет CI. Перед production нужен smoke test контейнеров.
 
 ```sh
 # Только отдельная одноразовая тестовая БД: conftest удаляет тестовые таблицы!
@@ -178,4 +178,5 @@ SALES_TEST_BASE_URL=http://127.0.0.1:5173 npm run test:sales:e2e
 - `frontend/src/pages/app/sales/SalesPage.tsx`, `app/router.tsx`, `layouts/AppLayout.tsx`.
 - `frontend/package.json`, `package-lock.json`, `e2e-sales.mjs`.
 - `scripts/seed-sales-test.py`, `scripts/check-sales-migration.py`.
+- `.github/workflows/ci.yml`: frontend Docker build использует корень репозитория согласно Dockerfile.
 - Этот отчёт и `docs/screenshots/sales/*`.

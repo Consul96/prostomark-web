@@ -95,7 +95,7 @@ jobs:
       - name: Build worker image
         run: docker build -f backend/Dockerfile.worker -t prostomark-worker ./backend
       - name: Build frontend image
-        run: docker build -t prostomark-frontend ./frontend
+        run: docker build -f frontend/Dockerfile -t prostomark-frontend .
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
